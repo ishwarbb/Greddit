@@ -12,10 +12,10 @@ import PersonIcon from '@mui/icons-material/Person';
 import { blue } from '@mui/material/colors';
 
 export const followerEmails = ['admin@admin'];
-for (let i = 0 ; i < 100 ; i++ )
-{
-  followerEmails.push("hi@gmail.com");
-}
+// for (let i = 0 ; i < 100 ; i++ )
+// {
+//   followerEmails.push("hi@gmail.com");
+// }
 
 export default function Followers(props) {
   const { onClose, open } = props;

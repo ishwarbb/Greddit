@@ -1,9 +1,23 @@
 import { Button, Grid, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { Link } from "@mui/material";
+import { useEffect, useState } from "react";
+import { getUserInfo } from "./misc";
 
 const LogOut = () => {
-    let loggedinUser = localStorage.getItem('logged in');
+
+    const [loggedinUser, setUsrData] = useState(null);
+
+    useEffect(() => {
+    let promiseB = async () => {
+        const a = await getUserInfo();
+        console.log(a);
+        setUsrData(a.email);
+      };
+
+    promiseB();
+    },[]);
+
     console.log(loggedinUser)
 
     function mylink(link,name)
@@ -11,7 +25,7 @@ const LogOut = () => {
         return <Link href={link} underline="hover"> {name} </Link>
     };
 
-    if((loggedinUser === null) || (loggedinUser === 'null'))
+    if((loggedinUser === null))
     {
         return ( 
             <Grid
@@ -46,7 +60,14 @@ const LogOut = () => {
                 Are you sure?
             </Typography>
             <Box paddingTop={5} >
-                <Button variant="contained" onClick={()=>{localStorage.setItem('logged in',null);window.location.replace("/login")}}>Yes</Button>
+                <Button variant="contained" onClick={ ()=>
+                {
+                    localStorage.setItem('logged in',null);
+                    localStorage.removeItem('token');
+                    window.location.replace("/login")
+                }
+                }>
+                    Yes</Button>
                 <Button variant="text" onClick={()=>window.location.replace("/")}  >Cancel</Button>
             </Box>
         </Grid> 
