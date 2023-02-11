@@ -7,8 +7,9 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import React, { useState } from 'react';
 import { Typography } from '@mui/material';
-const axios = require("axios");
+import axios from 'axios';
 // import { useRef } from 'react';
+
 
 
 const SignIn = () => {
@@ -67,8 +68,11 @@ const SignIn = () => {
           return;
         }
 
-        let user = localStorage.getItem(data.get('email'));
-        user = JSON.parse(user)
+        // let user = localStorage.getItem(data.get('email'));
+        // user = JSON.parse(user)
+
+        let user = data.get('email') ;
+
         console.log("user = ",user)
         if(user === null)
         {
@@ -81,30 +85,42 @@ const SignIn = () => {
             password: data.get('password'),
           };
           // if(data.get('password') !== user["password"])
+          
+          console.log("Calling userAuth");
+          var x = userAuth(userdetails);
 
-          if(userAuth(userdetails) === -1) 
-          {
-            handleIncorrect();
-          }else
-          {
-            localStorage.setItem("logged in",userdetails.email);
-            window.location.replace('/');
-          }
         }
       };
 
       async function userAuth(user) {
-    
+        
+        console.log("posting /auth", user);
+
+        try{
         const response = await axios.post(
           "/auth",user
         );
-    
-        if (response.status === 400) {
-          return -1;
-        } else {
-          return 0;
-        }
 
+        console.log("returning ",response);
+
+        console.log("x is ",response.status);
+        if(response.status !== 200) 
+        {
+          handleIncorrect();
+        }else 
+        {
+          localStorage.setItem('token', response.data.token);
+
+          window.location.replace('/');
+        }
+        
+        return response;
+
+      }
+        catch
+        {
+          handleIncorrect();
+        };
       }
 
     return (  

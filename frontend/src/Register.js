@@ -101,7 +101,10 @@ const Register = () => {
     };
     localStorage.setItem(userdata.email, JSON.stringify(userdata));
     console.log("Calling saveData");
-    saveData(userdata);
+    var response = saveData(userdata);
+    // localStorage.setItem('token', response.data.token);
+    // window.location.replace('/');
+
     setState({ open: true, });
 
   };

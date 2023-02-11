@@ -31,8 +31,6 @@ router.post("/", (req, res) => {
     password: req.body.password,
     age: req.body.age
   });
-  
-  console.log("email got =",newUser.email.trim() == "ishwarbb23@gmail.com")
 
   User.findOneAndUpdate(
     {email: newUser.email.trim()},

@@ -1,11 +1,12 @@
-import { Avatar, Box, Button, Grid, Link, TextField, Typography } from "@mui/material";
-import { useState } from 'react';
+import { Avatar, Box, Button, CircularProgress, Grid, Link, TextField, Typography } from "@mui/material";
+import { useEffect, useState } from 'react';
 import Followers from "./Followers";
 import Following from "./Following";
 import { followerEmails } from "./Followers";
 import { followingEmails } from "./Following";
 import axios from "axios";
-
+import { getUserInfo } from "./misc";
+import { useLoaderData } from "react-router-dom";
 async function updateData(reqdata)
 {
     const response = await axios.post(
@@ -19,9 +20,43 @@ async function updateData(reqdata)
     }
 }
 
+export const ProfileLoader = async () => {
+    const a = await getUserInfo();
+        console.log(a);
+    return a;
+}
+
+
 const ProfilePage = () => {
-    let loggedinUser = localStorage.getItem('logged in');
-    console.log(loggedinUser)
+    // let loggedinUser = localStorage.getItem('logged in');
+    const [isLoading, setIsLoading] = useState(true);
+    const [usrData, setUsrData] = useState(null);
+
+    let loggedinUser = null;
+    // let loggedinUser = await getUserInfo();
+
+
+    // let promiseB = promiseA.then(function(result) {
+    //     return result ;
+    //   });
+
+    useEffect(() => {
+    let promiseB = async () => {
+        const a = await getUserInfo();
+        console.log(a);
+    console.log(loggedinUser);
+    setUsrData(a);
+    setIsLoading(false);
+      };
+
+    promiseB();
+    },[]);
+
+    // // let loggedinUser = promiseB;
+    // console.log(loggedinUser)
+    // console.log(promiseB)
+
+    // while(loggedinUser == null){}
 
     function mylink(link, name) {
         return <Link href={link} underline="hover"> {name} </Link>
@@ -48,7 +83,7 @@ const ProfilePage = () => {
     const [openFollowing, setOpenFollowing] = useState(false);
 
 
-    if (loggedinUser === null || loggedinUser === 'null') {
+    if (localStorage.getItem('token') === null) {
         return (
             <Grid
                 container
@@ -68,8 +103,10 @@ const ProfilePage = () => {
         );
     }
 
-    let userdata = localStorage.getItem(loggedinUser);
-    userdata = JSON.parse(userdata)
+    // let userdata = localStorage.getItem(loggedinUser);
+    // userdata = JSON.parse(userdata)
+
+    let userdata = loggedinUser;
 
     const ErrorMsg = () => {
         return (
@@ -139,7 +176,7 @@ const ProfilePage = () => {
         }
 
         let userdata = {
-            email: loggedinUser,
+            email: usrData.email,
             username: data.get('username'),
             firstname: data.get('firstName'),
             lastname: data.get('lastName'),
@@ -147,7 +184,6 @@ const ProfilePage = () => {
             contactnumber: data.get('contactnumber')
         };
 
-        console.log(userdata);
 
         localStorage.setItem(userdata.email, JSON.stringify(userdata));
         updateData(userdata);
@@ -172,6 +208,19 @@ const ProfilePage = () => {
         setOpenFollowing(false);
     };
 
+    console.log("userdata = ",userdata);
+    console.log("usrData = ",usrData);
+
+    if (isLoading) {
+        return (
+
+            <Box sx={{ display: "flex", justifyContent: "center", mt: "20em" }}>
+              <CircularProgress size={100} />
+            </Box>
+    
+        );
+      }
+    else{
     return (
         <Grid
             container
@@ -200,7 +249,7 @@ const ProfilePage = () => {
 
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3, marginLeft: 5, marginRight: 5, width: 800 }}>
                 <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={0}>
                         <TextField
                             autoComplete="given-name"
                             name="firstName"
@@ -211,7 +260,7 @@ const ProfilePage = () => {
                             autoFocus
                             error={fieldErrors['firstname']}
                             variant="standard"
-                            defaultValue={userdata.firstname}
+                            defaultValue={usrData.firstName}
                             disabled={isDisabled}
                             sx={{
                                 "& .MuiInputBase-input.Mui-disabled": {
@@ -230,7 +279,7 @@ const ProfilePage = () => {
                             autoComplete="family-name"
                             error={fieldErrors['lastname']}
                             variant="standard"
-                            defaultValue={userdata.lastname}
+                            defaultValue={usrData.lastName}
                             disabled={isDisabled}
                             sx={{
                                 "& .MuiInputBase-input.Mui-disabled": {
@@ -249,7 +298,7 @@ const ProfilePage = () => {
                             autoComplete="User Name"
                             error={fieldErrors['username']}
                             variant="standard"
-                            defaultValue={userdata.username}
+                            defaultValue={usrData.userName}
                             disabled={isDisabled}
                             sx={{
                                 "& .MuiInputBase-input.Mui-disabled": {
@@ -268,7 +317,7 @@ const ProfilePage = () => {
                             name="email"
                             autoComplete="email"
                             variant="standard"
-                            defaultValue={userdata.email}
+                            defaultValue={usrData.email}
                             error={fieldErrors['email']}
                             disabled={true}
                             sx={{
@@ -290,7 +339,7 @@ const ProfilePage = () => {
                             autoFocus
                             error={fieldErrors['age']}
                             variant="standard"
-                            defaultValue={userdata.age}
+                            defaultValue={usrData.age}
                             disabled={isDisabled}
                             sx={{
                                 "& .MuiInputBase-input.Mui-disabled": {
@@ -310,7 +359,7 @@ const ProfilePage = () => {
                             autoComplete="contact-number"
                             error={fieldErrors['contactnumber']}
                             variant="standard"
-                            defaultValue={userdata.contactnumber}
+                            defaultValue={usrData.contactNumber}
                             disabled={isDisabled}
                             sx={{
                                 "& .MuiInputBase-input.Mui-disabled": {
@@ -347,6 +396,7 @@ const ProfilePage = () => {
             <Following open={openFollowing} onClose={handleCloseFollowing} />             
         </Grid>
     );
+            }
 }
 
 export default ProfilePage;
