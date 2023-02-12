@@ -62,7 +62,7 @@ const LogOut = () => {
             <Box paddingTop={5} >
                 <Button variant="contained" onClick={ ()=>
                 {
-                    localStorage.setItem('logged in',null);
+                    // localStorage.setItem('logged in',null);
                     localStorage.removeItem('token');
                     window.location.replace("/login")
                 }

@@ -13,15 +13,6 @@ import { Link } from '@mui/material';
 const theme = createTheme();
 
 const LoginPage = () => {
-  localStorage.setItem('admin',JSON.stringify({
-    "email": 'admin@admin',
-    "password": 'admin',
-    "username": 'admin',
-    "firstname": 'admin',
-    "lastname": 'admin',
-    "age": 20,
-    "contactnumber": 8660156238
-  }));
 
   let loggedinUser = localStorage.getItem('logged in');
   console.log(loggedinUser)

@@ -12,15 +12,32 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import RedditIcon from '@mui/icons-material/Reddit';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import HomeIcon from '@mui/icons-material/Home';
+import GradeIcon from '@mui/icons-material/Grade';
+import { yellow } from '@mui/material/colors';
 // import { Link } from 'react-router-dom';
 
 // const pages = ['Profile', 'Login', 'Logout'];
-const pages = [];
+const pages = ['SubGreddits','MySubGreddits','Saved Posts','Profile'];
+
+const pageicons = {
+  'SubGreddits' :  <RedditIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />,
+  'MySubGreddits' :  <HomeIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />,
+  'Saved Posts' :  <GradeIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />,
+  'Profile' :  <AccountCircleIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />,
+
+};
+
 const settings = ['Profile','Logout'];
 const paths = {
   'Profile' : "/",
   'Login' : "/login",
-  'Logout': "/logout" 
+  'Logout': "/logout" ,
+  'SubGreddits' :  "/subgreddits",
+  'MySubGreddits' :  "/mysubgreddits",
+  'Saved Posts' :  "/saved",
 }
 
 function NavBar() {
@@ -43,10 +60,10 @@ function NavBar() {
   };
 
   return (
-    <AppBar position="absolute">
+    <AppBar position="absolute" color="secondary">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <RedditIcon fontSize="large"sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, color: yellow[500] }} />
           <Typography
             variant="h6"
             noWrap
@@ -58,7 +75,7 @@ function NavBar() {
               fontFamily: 'monospace',
               fontWeight: 700,
               letterSpacing: '.3rem',
-              color: 'inherit',
+              color: yellow[500],
               textDecoration: 'none',
             }}
           >
@@ -96,7 +113,9 @@ function NavBar() {
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                  <Typography textAlign="center">
+                    {pageicons['SubGreddits']}
+                    {page}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -124,9 +143,11 @@ function NavBar() {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                // onClick={handleCloseNavMenu}
+                onClick={()=>{window.location.replace(paths[page])}}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
+              {pageicons[page]}
                 {page}
               </Button>
             ))}

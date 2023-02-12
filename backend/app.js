@@ -10,6 +10,7 @@ var pushdataRouter = require("./routes/pushdata");
 var updatedataRouter = require("./routes/updatedata");
 var authenticateRouter = require("./routes/authenticate");
 var userinfoRouter = require("./routes/userinfo");
+var removeRouter = require("./routes/remove");
 
 
 var app = express();
@@ -30,6 +31,7 @@ app.use('/pushdata', pushdataRouter);
 app.use('/updatedata', updatedataRouter);
 app.use('/auth', authenticateRouter);
 app.use('/userinfo', userinfoRouter);
+app.use('/remove', removeRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

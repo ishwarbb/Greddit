@@ -4,8 +4,9 @@ import { BrowserRouter,Routes, Route } from "react-router-dom";
 import NavBar from './NavBar';
 import ProfilePage from './ProfilePage';
 import LogOut from './LogOut';
-import MyGreddits from './MyGreddits';
-import GredditsPage from './GredditsPage';
+import MySubGreddits from './MySubGreddits';
+import SubGredditsPage from './SubGredditsPage';
+import SavedPosts from './Saved';
 
 function App() {
   return (
@@ -16,8 +17,9 @@ function App() {
           <Routes >
             <Route path="/login" element={<LoginPage/>}/>
             <Route path="/logout" element={<LogOut/>} />
-            <Route path="/greddits" element={<GredditsPage />} />
-            <Route path="/mygreddits" element={<MyGreddits />} />
+            <Route path="/subgreddits" element={<SubGredditsPage />} />
+            <Route path="/mysubgreddits" element={<MySubGreddits />} />
+            <Route path="/saved" element={<SavedPosts />} />
             <Route path="/" element={<ProfilePage />} />
           </Routes>
       </div>

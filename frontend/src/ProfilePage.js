@@ -2,11 +2,9 @@ import { Avatar, Box, Button, CircularProgress, Grid, Link, TextField, Typograph
 import { useEffect, useState } from 'react';
 import Followers from "./Followers";
 import Following from "./Following";
-import { followerEmails } from "./Followers";
-import { followingEmails } from "./Following";
 import axios from "axios";
 import { getUserInfo } from "./misc";
-import { useLoaderData } from "react-router-dom";
+
 async function updateData(reqdata)
 {
     const response = await axios.post(
@@ -44,9 +42,9 @@ const ProfilePage = () => {
     let promiseB = async () => {
         const a = await getUserInfo();
         console.log(a);
-    console.log(loggedinUser);
-    setUsrData(a);
-    setIsLoading(false);
+        console.log(loggedinUser);
+        setUsrData(a);
+        setIsLoading(false);
       };
 
     promiseB();
@@ -240,10 +238,10 @@ const ProfilePage = () => {
                 paddingTop={2}
             >
                 <Button onClick={handleClickOpenFollowers}>
-                    Followers : {followerEmails.length}
+                    Followers : {usrData.followers.length + 1}
                 </Button>
                 <Button onClick={handleClickOpenFollowing}>
-                    Following : {followingEmails.length}
+                    Following : {usrData.following.length + 1}
                 </Button>
             </Grid>
 
@@ -392,8 +390,8 @@ const ProfilePage = () => {
                 }
 
             </Box>
-            <Followers open={openFollowers} onClose={handleCloseFollowers} />             
-            <Following open={openFollowing} onClose={handleCloseFollowing} />             
+            <Followers open={openFollowers} onClose={handleCloseFollowers} followers={usrData.followers} user={usrData.email} />             
+            <Following open={openFollowing} onClose={handleCloseFollowing} following={usrData.following} user={usrData.email} />             
         </Grid>
     );
             }
