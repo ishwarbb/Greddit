@@ -9,16 +9,15 @@ import ListItemText from '@mui/material/ListItemText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import PersonIcon from '@mui/icons-material/Person';
-import { blue } from '@mui/material/colors';
+import { blue, red } from '@mui/material/colors';
+import { Button } from '@mui/material';
+import UnsubscribeIcon from '@mui/icons-material/Unsubscribe';
+import axios from 'axios';
 
-export const followerEmails = ['admin@admin'];
-// for (let i = 0 ; i < 100 ; i++ )
-// {
-//   followerEmails.push("hi@gmail.com");
-// }
 
 export default function Followers(props) {
-  const { onClose, open } = props;
+  const { onClose, open, followers, user } = props;
+  var followerEmails = followers.concat( ['admin@admin']);
 
   const handleClose = () => {
     onClose(false);
@@ -42,6 +41,13 @@ export default function Followers(props) {
               </ListItemAvatar>
               <ListItemText primary={email} />
             </ListItemButton>
+            <Button> 
+                  <UnsubscribeIcon fontSize="large"sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, color: red[500] }}
+                    onClick={() => {
+                        axios.post('/remove/removefollowers', { personRemoving : user, personToBeRemoved : email });
+                        window.location.replace('/');
+                    }}/>
+            </Button>
           </ListItem>
         ))}
       </List>

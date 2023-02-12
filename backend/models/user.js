@@ -37,7 +37,17 @@ const UserSchema = new Schema({
     type: Number,
     required: true,
     unique: false,
-  }
+  },
+  followers :{
+    type: Array,
+    required: false,
+    unique: false
+  },
+  following :{
+    type: Array,
+    required: false,
+    unique: false
+  },
 });
 
 module.exports = User = mongoose.model("Users", UserSchema);

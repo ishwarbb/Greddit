@@ -10,7 +10,9 @@ import { useState } from 'react';
 import axios from "axios";
 var bcrypt = require('bcryptjs');
 
-async function saveData(reqdata)
+
+const Register = () => {
+  async function saveData(reqdata)
 {
     const response = await axios.post(
     "/pushdata",
@@ -18,13 +20,15 @@ async function saveData(reqdata)
     );
     if (response.status === 200) {
         console.log("Success");
+      setState({ open: true, });
+        return 200;
     } else {
     console.log("error");
+    return 400;
     }
+    // return response;
 }
 
-
-const Register = () => {
   const [state, setState] = useState({
     open: false,
   });
@@ -102,10 +106,19 @@ const Register = () => {
     localStorage.setItem(userdata.email, JSON.stringify(userdata));
     console.log("Calling saveData");
     var response = saveData(userdata);
-    // localStorage.setItem('token', response.data.token);
-    // window.location.replace('/');
+    console.log("res = ",response);
 
-    setState({ open: true, });
+    if(response === 200)
+    {
+      // localStorage.setItem('token', response.data.token);
+      // window.location.replace('/');
+      setState({ open: true, });
+    }
+    if(response !== 200)
+    {
+      setMsg("Email already taken");
+      return;
+    }
 
   };
 
