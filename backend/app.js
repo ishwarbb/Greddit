@@ -11,6 +11,9 @@ var updatedataRouter = require("./routes/updatedata");
 var authenticateRouter = require("./routes/authenticate");
 var userinfoRouter = require("./routes/userinfo");
 var removeRouter = require("./routes/remove");
+var createSubGredditRouter = require("./routes/createsubgreddit");
+var getUserSubGredditRouter = require("./routes/getUserSubGredditInfo");
+var getSubGredditInfobyIDRouter = require("./routes/getsubgredditbyid");
 
 
 var app = express();
@@ -32,6 +35,9 @@ app.use('/updatedata', updatedataRouter);
 app.use('/auth', authenticateRouter);
 app.use('/userinfo', userinfoRouter);
 app.use('/remove', removeRouter);
+app.use('/createsubgreddit', createSubGredditRouter);
+app.use('/getusersubgreddit', getUserSubGredditRouter);
+app.use('/getsubgredditbyid', getSubGredditInfobyIDRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
