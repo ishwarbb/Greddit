@@ -7,6 +7,11 @@ import LogOut from './LogOut';
 import MySubGreddits from './MySubGreddits';
 import SubGredditsPage from './SubGredditsPage';
 import SavedPosts from './Saved';
+import MSGInstanceBar from './MSGInstanceBar';
+import MSGInstanceUsers from './MSGInstanceUsers';
+import MSGInstanceJoinRequests from './JoinRequests';
+import Stats from './Stats';
+import Reported from './Reported';
 
 function App() {
   return (
@@ -18,6 +23,11 @@ function App() {
             <Route path="/login" element={<LoginPage/>}/>
             <Route path="/logout" element={<LogOut/>} />
             <Route path="/subgreddits" element={<SubGredditsPage />} />
+            <Route path="/mysubgreddits/:id/users" element={<MSGInstanceUsers />} />
+            <Route path="/mysubgreddits/:id/joinrequests" element={<MSGInstanceJoinRequests />} />
+            <Route path="/mysubgreddits/:id/stats" element={<Stats />} />
+            <Route path="/mysubgreddits/:id/reported" element={<Reported />} />
+            <Route path="/mysubgreddits/:id" element={<MSGInstanceBar />} />
             <Route path="/mysubgreddits" element={<MySubGreddits />} />
             <Route path="/saved" element={<SavedPosts />} />
             <Route path="/" element={<ProfilePage />} />

@@ -22,9 +22,29 @@ const SubGredditSchema = new Schema({
     type: Array,
     required: false,
     unique: false,    
+  },
+  people : {
+    type : Array,
+    required : false,
+    unique: false
+  },
+  bannedpeople : {
+    type : Array,
+    required : false,
+    unique: false
+  },
+  requestingpeople : {
+    type : Array,
+    required : false,
+    unique: false
+  },
+  posts : {
+    type : Array,
+    requird : false,
+    unique : false    
   }
 
 
 });
 
-module.exports = SubGreddit = mongoose.model("SubGrediits", SubGredditSchema);
+module.exports = SubGreddit = mongoose.model("SubGreddits", SubGredditSchema);

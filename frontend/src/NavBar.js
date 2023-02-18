@@ -115,6 +115,7 @@ function NavBar() {
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">
                     {pageicons['SubGreddits']}
+                    </Typography><Typography textAlign="center">
                     {page}</Typography>
                 </MenuItem>
               ))}
