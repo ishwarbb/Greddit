@@ -12,6 +12,7 @@ import MSGInstanceUsers from './MSGInstanceUsers';
 import MSGInstanceJoinRequests from './JoinRequests';
 import Stats from './Stats';
 import Reported from './Reported';
+import SG from './SG';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Routes >
             <Route path="/login" element={<LoginPage/>}/>
             <Route path="/logout" element={<LogOut/>} />
+            <Route path="/subgreddits/:id" element={<SG />} />
             <Route path="/subgreddits" element={<SubGredditsPage />} />
             <Route path="/mysubgreddits/:id/users" element={<MSGInstanceUsers />} />
             <Route path="/mysubgreddits/:id/joinrequests" element={<MSGInstanceJoinRequests />} />

@@ -68,8 +68,8 @@ router.post('/', async (req, res) => {
     }
 
     // hash user password
-    const salt = await bcrypt.genSalt(10);
-    newUser.password = await bcrypt.hash( newUser.password, salt);
+    // const salt = await bcrypt.genSalt(10);
+    // newUser.password = await bcrypt.hash( req.body.password, salt);
     await newUser.save();
 
     // return jwt
