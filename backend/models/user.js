@@ -48,6 +48,11 @@ const UserSchema = new Schema({
     required: false,
     unique: false
   },
+  savedPosts :{
+    type: Array,
+    required: false,
+    unique: false
+  },
 });
 
 module.exports = User = mongoose.model("Users", UserSchema);

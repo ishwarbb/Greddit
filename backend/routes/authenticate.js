@@ -12,17 +12,20 @@ router.post('/', async (req, res) => {
   var email = req.body.email; // here user is an email
   var password = req.body.password;
 
-//   console.log(email,password);
+  console.log(email,password);
 
   try {
       // check if the user already exists
       userdetails = await User.findOne({ email : email});
+      console.log(userdetails);
+      console.log(password);
       if (!userdetails) {
             console.log("Invalid email");
           return res.status(400).json({ msg: 'Email or password incorrect' });
       }
 
       const isMatch = await bcrypt.compare(password, userdetails.password);
+      // const isMatch = (password == userdetails.password);
       console.log("isMatch = ",isMatch);
       if (!isMatch) {
         return res.status(400).json({ msg: 'Email or password incorrect' });

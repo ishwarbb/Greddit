@@ -96,6 +96,7 @@ const Register = () => {
 
     let userdata = {
       email: data.get('email'),
+      // password: data.get('password'),
       password: hash,
       username: data.get('username'),
       firstname: data.get('firstName'),
@@ -103,7 +104,7 @@ const Register = () => {
       age: data.get('age'),
       contactnumber: data.get('contactnumber')
     };
-    localStorage.setItem(userdata.email, JSON.stringify(userdata));
+    // localStorage.setItem(userdata.email, JSON.stringify(userdata));
     console.log("Calling saveData");
     var response = saveData(userdata);
     console.log("res = ",response);
@@ -114,7 +115,7 @@ const Register = () => {
       // window.location.replace('/');
       setState({ open: true, });
     }
-    if(response !== 200)
+    if(response === 400)
     {
       setMsg("Email already taken");
       return;
