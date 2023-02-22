@@ -110,6 +110,25 @@ export const getPosts = async () => {
   }
 };
 
+export const getPostsbyPostedIn = async (id) => {
+  const token = localStorage.getItem('token');
+
+  if (token) {
+    try {
+      axios.defaults.headers.common['x-auth-token'] = token;
+      const res = await axios.post(`/getpostsbypostedin`,id);
+      // console.log(res.data.user);
+      return res.data.post;
+      
+    } catch (err) {
+      console.error(err);
+    }
+  } else {
+    delete axios.defaults.headers.common['x-auth-token'];
+  }
+};
+
+
 export const getPostsbyId = async (id) => {
   const token = localStorage.getItem('token');
 
@@ -117,6 +136,133 @@ export const getPostsbyId = async (id) => {
     try {
       axios.defaults.headers.common['x-auth-token'] = token;
       const res = await axios.post(`/getpostsbyid`,id);
+      // console.log(res.data.user);
+      return res.data.post;
+      
+    } catch (err) {
+      console.error(err);
+    }
+  } else {
+    delete axios.defaults.headers.common['x-auth-token'];
+  }
+};
+
+export const removeSavedPostbyId = async (id) => {
+  const token = localStorage.getItem('token');
+
+  if (token) {
+    try {
+      axios.defaults.headers.common['x-auth-token'] = token;
+      const res = await axios.post(`/removesavedpostbyid`,id);
+      // console.log(res.data.user);
+      return res.data.post;
+      
+    } catch (err) {
+      console.error(err);
+    }
+  } else {
+    delete axios.defaults.headers.common['x-auth-token'];
+  }
+};
+
+export const joinSubgreddit = async (object) => {
+  const token = localStorage.getItem('token');
+
+  if (token) {
+    try {
+      axios.defaults.headers.common['x-auth-token'] = token;
+      const res = await axios.post(`/joinsubgreddit`,object);
+      // console.log(res.data.user);
+      return res.data.post;
+      
+    } catch (err) {
+      console.error(err);
+    }
+  } else {
+    delete axios.defaults.headers.common['x-auth-token'];
+  }
+};
+
+export const requestSubgreddit = async (sgid) => {
+  const token = localStorage.getItem('token');
+
+  if (token) {
+    try {
+      axios.defaults.headers.common['x-auth-token'] = token;
+      const res = await axios.post(`/requestsubgreddit`,sgid);
+      // console.log(res.data.user);
+      return res.data.post;
+      
+    } catch (err) {
+      console.error(err);
+    }
+  } else {
+    delete axios.defaults.headers.common['x-auth-token'];
+  }
+};
+
+
+export const getJoinedSubgreddits = async () => {
+  const token = localStorage.getItem('token');
+
+  if (token) {
+    try {
+      axios.defaults.headers.common['x-auth-token'] = token;
+      const res = await axios.post(`/getjoinedsubgreddits`);
+      // console.log(res.data.subgreddit);
+      return res.data.subgreddit;
+      
+    } catch (err) {
+      console.error(err);
+    }
+  } else {
+    delete axios.defaults.headers.common['x-auth-token'];
+  }
+};
+
+export const rejectUser = async (object) => {
+  const token = localStorage.getItem('token');
+
+  if (token) {
+    try {
+      axios.defaults.headers.common['x-auth-token'] = token;
+      const res = await axios.post(`/rejectuser`,object);
+      // console.log(res.data.user);
+      return res.data.post;
+      
+    } catch (err) {
+      console.error(err);
+    }
+  } else {
+    delete axios.defaults.headers.common['x-auth-token'];
+  }
+};
+
+export const leaveSubgreddit = async (object) => {
+  const token = localStorage.getItem('token');
+
+  if (token) {
+    try {
+      axios.defaults.headers.common['x-auth-token'] = token;
+      const res = await axios.post(`/leavesubgreddit`,object);
+      // console.log(res.data.user);
+      return res.data.post;
+      
+    } catch (err) {
+      console.error(err);
+    }
+  } else {
+    delete axios.defaults.headers.common['x-auth-token'];
+  }
+};
+
+export const addComments = async (object) => {
+  const token = localStorage.getItem('token');
+
+  if (token) {
+    try {
+      axios.defaults.headers.common['x-auth-token'] = token;
+      const res = await axios.post(`/addcomments`,object);
       // console.log(res.data.user);
       return res.data.post;
       

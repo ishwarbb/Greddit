@@ -14,9 +14,8 @@ mongoose.connect("mongodb+srv://ishwar:shane123@cluster0.bt85bam.mongodb.net/?re
         });
 
 router.post('/',auth, async (req, res) => {
-  console.log(req.body.id);
     try {
-      const post = await Post.findOne({_id : req.body.id});
+      const post = await Post.find({postedIn : req.body.id});
       console.log("post = ",post);
       res.status(200).json({post});
     } catch (error) {

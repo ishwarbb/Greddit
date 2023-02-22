@@ -21,7 +21,7 @@ const SubGredditSchema = new Schema({
   bannedKeywords : {
     type: Array,
     required: false,
-    unique: false,    
+    unique: false,     
   },
   people : {
     type : Array,
@@ -40,10 +40,24 @@ const SubGredditSchema = new Schema({
   },
   posts : {
     type : Array,
-    requird : false,
+    required : false,
     unique : false    
-  }
-
+  },
+  creator : {
+    type : String,
+    required : false,
+    unique : false    
+  },
+  creationDate : {
+    type : Date,
+    required : false,
+    unique : true
+  },
+  reportedPosts : {
+    type : Array,
+    required : false,
+    unique : true
+  },
 
 });
 

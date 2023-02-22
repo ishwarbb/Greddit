@@ -1,7 +1,7 @@
 import { Avatar, Card, CardContent, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemIcon, ListItemText, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getSubGredditInfobyID } from "./misc";
+import { getSubGredditInfobyID, joinSubgreddit, rejectUser } from "./misc";
 import MSGInstanceBar from "./MSGInstanceBar";
 import DeleteIcon from '@mui/icons-material/Delete';
 import DoneIcon from '@mui/icons-material/Done';
@@ -23,7 +23,7 @@ const MSGInstanceJoinRequests = () => {
         setSubgreddits(b);
         if(b.people !== undefined) setPeople(b.people);
         if(b.bannedpeople !== undefined) setBannedPeople(b.banned);
-        if(b.requestingpeople !== undefined) setBannedPeople(b.requestingpeople);
+        if(b.requestingpeople !== undefined) setRequestingPeople(b.requestingpeople);
       };
 
     promiseB();
@@ -41,12 +41,12 @@ const MSGInstanceJoinRequests = () => {
             style={{ minHeight: '100vh' , marginTop:'100px'}}
             >
                        <Grid item xs={12} md={6}>
-                <Card sx={{ maxWidth: 900, width:900 }}> <CardContent>
+                <Card sx={{ maxWidth: 900, width:900 }} elevation={5} style={{backgroundColor: "#f3e5f5"}}> <CardContent>
                         <Typography sx={{ mt: 4, mb: 2 }} color="secondary" variant="h6" component="div">
                             Join - Requests
                         </Typography>
                             <List elevation={5}>
-                            {people.map( a => (
+                            {requestingpeople.map( requestinguser => (
                                 <ListItem>
                                 <ListItemAvatar>
                                     <Avatar>
@@ -54,16 +54,33 @@ const MSGInstanceJoinRequests = () => {
                                     </Avatar>
                                 </ListItemAvatar>
                                 <ListItemText
-                                    primary={a}
+                                    primary={requestinguser}
                                     // secondary={peopleInfo[a] ? peopleInfo[a].userName : "Hisname"}
                                 />
                                 <ListItemIcon>
-                                    <IconButton edge="end" aria-label="delete">
+                                    <IconButton edge="end" aria-label="delete" onClick={()=>
+                                    {
+                                        console.log("joining - ", id);
+                                        console.log("requesting - ", requestinguser);
+                                        var res = joinSubgreddit({
+                                            newuser : requestinguser,
+                                            sgid : id
+                                        });
+                                        window.location.reload(true); 
+                                    }}
+                                    >
                                     <DoneIcon sx={{ color: green[500] }} />
                                     </IconButton>
                                 </ListItemIcon>
                                 <ListItemIcon>
-                                    <IconButton edge="end" aria-label="delete">
+                                    <IconButton edge="end" aria-label="delete" onClick={()=>
+                                    {
+                                        rejectUser({
+                                            user : requestinguser,
+                                            sgid : id
+                                        });
+                                        window.location.reload(true); 
+                                    }} >
                                     <CloseIcon sx={{ color: red[500] }}/>
                                     </IconButton>
                                 </ListItemIcon>

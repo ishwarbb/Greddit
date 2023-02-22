@@ -1,20 +1,21 @@
-import { Avatar, Button, Card, CardActions, CardContent, CardHeader, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, TextField } from "@mui/material";
+import { Avatar, Button, Card, CardActions, CardContent, CardHeader, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, List, ListItem, ListItemAvatar, ListItemText, TextField } from "@mui/material";
 import { red } from "@mui/material/colors";
 import { Box } from "@mui/system";
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import OpenInBrowserIcon from '@mui/icons-material/OpenInBrowser';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from "axios";
-import { getPosts, getPostsbyId, getSubGredditInfobyID, getUserInfo } from "./misc";
+import { addComments, getPosts, getPostsbyPostedIn, getSubGredditInfobyID, getUserInfo } from "./misc";
 import { useParams } from "react-router-dom";
 import CommentIcon from '@mui/icons-material/Comment';
 import SaveIcon from '@mui/icons-material/Save';
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
+import FlagIcon from '@mui/icons-material/Flag';
 
 async function createPost(data) {
     const response = await axios.post(
@@ -31,7 +32,7 @@ async function createPost(data) {
 async function followuser(targetemail) {
     const response = await axios.post(
         "/followUser",
-        {targetemail : targetemail}
+        { targetemail: targetemail }
     );
     if (response.status === 200) {
         console.log("Success");
@@ -40,19 +41,59 @@ async function followuser(targetemail) {
     }
 }
 
+async function savepost(postid) {
+    const response = await axios.post(
+        "/savepost",
+        { postid: postid }
+    );
+    if (response.status === 200) {
+        console.log("Success");
+    } else {
+        console.log("error");
+    }
+}
+
+async function reportPost(data) {
+    const response = await axios.post(
+        "/reportpost",
+        data
+    );
+    if (response.status === 200) {
+        console.log("Success");
+    } else {
+        console.log("error");
+    }
+}
+
+
+
 const SG = () => {
     let { id } = useParams();
     const [open, setOpen] = useState(false);
+    const [open2, setOpen2] = useState(false);
     const [usrData, setUsrData] = useState(null);
     const [posts, setPosts] = useState([]);
-    const [subGredditData,setSubGredditData] = useState([]);
+    const [subGredditData, setSubGredditData] = useState([]);
+    const [reportedpid, setReportedPid] = useState(null);
+
+    const [commentForm, setCommentForm] = useState(null);
+
+    const inputRef = useRef(null);
 
     const handleClickOpen = () => {
         setOpen(true);
     };
 
+    const handleClickOpen2 = () => {
+        setOpen2(true);
+    };
+
     const handleClose = () => {
         setOpen(false);
+    };
+
+    const handleClose2 = () => {
+        setOpen2(false);
     };
 
     // const handleExpandClick = () => {
@@ -63,12 +104,12 @@ const SG = () => {
     useEffect(() => {
         let promiseB = async () => {
             const a = await getUserInfo();
-            const b = await getPostsbyId({id : id});
-            const c = await getSubGredditInfobyID({id : id});
+            const b = await getPostsbyPostedIn({ id: id });
+            const c = await getSubGredditInfobyID({ id: id });
             console.log("a = ", a);
             console.log("a.email = ", a.email);
             console.log("b = ", b);
-            console.log("c = ",c);
+            console.log("c = ", c);
             setUsrData(a);
             setPosts(b);
             setSubGredditData(c);
@@ -93,7 +134,7 @@ const SG = () => {
             downvotes: 0
         };
 
-        createPost(postdata,subGredditData);
+        createPost(postdata, subGredditData);
 
         console.log("posting=", postdata);
 
@@ -101,8 +142,36 @@ const SG = () => {
         window.location.reload(true);
     };
 
-    const followUser = (targetemail) => {
-        followuser(targetemail)
+    const handleSubmit2 = (event) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+
+        console.log("submitted report =", data);
+        console.log("submitted report =", data.get('concern'));
+
+        let postdata = {
+            pid: reportedpid,
+            sgid: subGredditData._id,
+            concern: data.get('concern')
+        };
+
+        reportPost(postdata);
+        console.log("reporting =", postdata);
+
+        handleClose();
+        window.location.reload(true);
+    };
+
+    const handleCommentSubmit = (event, post) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+
+        console.log("comment = ", data.get('comment'));
+        console.log("on post = ", commentForm);
+
+        addComments({ pid: commentForm, comment: data.get('comment') });
+        window.location.reload(true);
+
     }
 
     return (
@@ -117,7 +186,7 @@ const SG = () => {
                 spacing={3}
                 direction="row"
                 justify="center"
-                // alignItems="stretch"
+            // alignItems="stretch"
             >
 
                 <Grid item xs={12} sm={3} style={{ height: "100%" }} >
@@ -151,83 +220,153 @@ const SG = () => {
                         style={{ minHeight: '100vh' }}
                     >
                         <Grid item>
-                        <Dialog open={open} onClose={handleClose} component="form" noValidate onSubmit={handleSubmit} >
-                            <DialogTitle>Create Post</DialogTitle>
-                            <DialogContent>
-                                <DialogContentText>
-                                    To create a new post, please enter the details here. Please do not you banned words.
-                                </DialogContentText>
-                                <TextField
-                                    autoFocus
-                                    margin="dense"
-                                    id="text"
-                                    name="text"
-                                    label="Text"
-                                    multiline
-                                    rows={10}
-                                    fullWidth
-                                    variant="standard"
-                                />
+                            <Dialog open={open} onClose={handleClose} component="form" noValidate onSubmit={handleSubmit} >
+                                <DialogTitle>Create Post</DialogTitle>
+                                <DialogContent>
+                                    <DialogContentText>
+                                        To create a new post, please enter the details here. Please do not you banned words.
+                                    </DialogContentText>
+                                    <TextField
+                                        autoFocus
+                                        margin="dense"
+                                        id="text"
+                                        name="text"
+                                        label="Text"
+                                        multiline
+                                        rows={10}
+                                        fullWidth
+                                        variant="standard"
+                                    />
 
-                            </DialogContent>
-                            <DialogActions>
-                                <Button onClick={handleClose}>Cancel</Button>
-                                <Button type="submit" >Create</Button>
-                            </DialogActions>
-                        </Dialog>
-                        {
-                            posts.map((post) =>
-                            (
-                                <>
-                                    <Card sx={{ maxWidth: 900, width: 900 }} >
-                                        <CardHeader
-                                            avatar={
-                                                <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                                                    R
-                                                </Avatar>
-                                            }
-                                            action={
-                                                <IconButton aria-label="settings">
-                                                    <MoreVertIcon />
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button onClick={handleClose}>Cancel</Button>
+                                    <Button type="submit" >Create</Button>
+                                </DialogActions>
+                            </Dialog>
+                            <Dialog open={open2} onClose={handleClose2} component="form" noValidate onSubmit={handleSubmit2} >
+                                <DialogTitle>Report this Post</DialogTitle>
+                                <DialogContent>
+                                    <DialogContentText>
+                                        We promise to be responsible and look into the matter, please share your concern. Thank You
+                                    </DialogContentText>
+                                    <TextField
+                                        autoFocus
+                                        margin="dense"
+                                        id="concern"
+                                        name="concern"
+                                        label="Text"
+                                        multiline
+                                        rows={5}
+                                        fullWidth
+                                        variant="standard"
+                                    />
+
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button onClick={handleClose2}>Cancel</Button>
+                                    <Button type="submit" color="warning" >Report</Button>
+                                </DialogActions>
+                            </Dialog>
+                            {
+                                posts.map((post) =>
+                                (
+                                    <>
+                                        <Card sx={{ maxWidth: 900, width: 900 }} >
+                                            <CardHeader
+                                                avatar={
+                                                    <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+                                                        R
+                                                    </Avatar>
+                                                }
+                                                action={
+                                                    <IconButton aria-label="settings">
+                                                        <MoreVertIcon />
+                                                    </IconButton>
+                                                }
+                                                title={"posted by " + post.postedBy}
+                                                subheader={"posted in " + post.postedIn}
+                                            />
+                                            <CardContent>
+
+                                                <Typography gutterBottom maxWidth={900} paragraph>
+                                                    {post.text}
+                                                </Typography>
+                                            </CardContent>
+                                            <CardActions>
+                                                <IconButton aria-label="upvote">
+                                                    <ThumbUpIcon />
                                                 </IconButton>
-                                            }
-                                            title={"posted by " + post.postedBy}
-                                            subheader={"posted in " + post.postedIn}
-                                        />
-                                        <CardContent>
+                                                <Typography>
+                                                    {post.upvotes}
+                                                </Typography>
+                                                <IconButton aria-label="downvote">
+                                                    <ThumbDownIcon />
+                                                </IconButton>
+                                                <Typography>
+                                                    {post.downvotes}
+                                                </Typography>
+                                                <Button color="secondary" onClick={() => setCommentForm(post._id)} >
+                                                    Comment <CommentIcon />
+                                                </Button>
+                                                <Button color="secondary" onClick={() => savepost(post._id)}>
+                                                    Save <SaveIcon />
+                                                </Button>
+                                                <Button color="secondary" onClick={() => followuser(post.postedBy)}>
+                                                    Follow User <PersonAddAlt1Icon />
+                                                </Button>
+                                                {/* <Button color="secondary" onClick={() => reportPost(post._id,subGredditData._id)} > */}
+                                                <Button color="secondary" onClick={() => {
+                                                    setReportedPid(post._id);
+                                                    handleClickOpen2();
+                                                }} >
+                                                    Report <FlagIcon />
+                                                </Button>
+                                            </CardActions>
+                                            {commentForm === post._id ?
+                                                <>
+                                                    <Box component="form" noValidate onSubmit={handleCommentSubmit} sx={{ mt: 1 }}>
+                                                        <Container>
+                                                            Add Comment :
+                                                            <TextField
+                                                                size="small"
+                                                                id="comment"
+                                                                name="comment"
+                                                                ref={inputRef}
+                                                                variant="standard"
+                                                                color="secondary"
+                                                                backgroundcolor="#ffffff"
+                                                                style={{ marginLeft: "15px", marginRight: "15px", width: "600px" }}
+                                                            />
+                                                            <Button color="secondary" variant="contained" type="submit">
+                                                                Submit
+                                                            </Button>
+                                                        </Container>
+                                                    </Box>
 
-                                            <Typography gutterBottom maxWidth={900} paragraph>
-                                                {post.text}
-                                            </Typography>
-                                        </CardContent>
-                                        <CardActions>
-                                            <IconButton aria-label="upvote">
-                                                <ThumbUpIcon /> 
-                                            </IconButton>
-                                            <Typography>
-                                                {post.upvotes}
-                                            </Typography>
-                                            <IconButton aria-label="downvote">
-                                                <ThumbDownIcon />
-                                            </IconButton>
-                                            <Typography>
-                                                {post.downvotes}
-                                            </Typography>
-                                            <Button color="secondary">
-                                                Comment <CommentIcon/>
-                                            </Button>
-                                            <Button color="secondary">
-                                                Save <SaveIcon/>
-                                            </Button>
-                                            <Button color="secondary" onClick={followUser(post.postedBy)}>
-                                                Follow User <GroupAddIcon/>
-                                            </Button>
-                                        </CardActions>
-                                    </Card>
-                                    <br></br>
-                                </>
-                            ))
-                        }
+                                                </> : <></>
+                                            }
+                                            <Container>
+                                                <Typography  variant="button" color="secondary" gutterBottom>
+                                                    Comments : {post.comments.length}
+                                                </Typography>
+                                            </Container>
+                                            {post.comments.map((comment) => (
+                                                <List>
+                                                    <ListItem button>
+                                                        <ListItemAvatar>
+                                                            <Avatar alt="Profile Picture"> R </Avatar>
+                                                        </ListItemAvatar>
+                                                        <ListItemText primary={usrData.userName} secondary={comment} />
+                                                    </ListItem>
+                                                </List>
+                                            ))
+                                            }
+                                        </Card>
+                                        <br></br>
+                                    </>
+                                ))
+                            }
 
                         </Grid>
                     </Grid>
