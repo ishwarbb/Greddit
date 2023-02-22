@@ -170,7 +170,7 @@ const MyGreddits = () => {
                     People : {subgreddit.people.length}  Posts : {subgreddit.posts.length}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                    Banned KeyWords: {subgreddit.bannedKeywords.join(", ")} 
+                    Banned KeyWords: {subgreddit.bannedKeywords.join(", ")} .
                 </Typography>
                 <Typography gutterBottom maxWidth={900} paragraph>
                     {subgreddit.description}

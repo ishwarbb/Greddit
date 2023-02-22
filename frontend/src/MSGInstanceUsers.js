@@ -57,7 +57,7 @@ const MSGInstanceUsers = () => {
             justifyContent="flex-start"
             style={{ minHeight: '100vh' , marginTop:'100px'}}
             >
-                <Card sx={{ maxWidth: 900, width:900 }}> <CardContent>
+                <Card sx={{ maxWidth: 900, width:900 }} elevation={5} style={{backgroundColor: "#f3e5f5"}}> <CardContent>
                        <Grid item xs={12} md={6}>
                         <Typography sx={{ mt: 4, mb: 2 }} color="secondary" variant="h6" component="div">
                             Users of this SubGreddit:
@@ -81,7 +81,7 @@ const MSGInstanceUsers = () => {
                         </CardContent> </Card>
                         <br></br>
                         <Grid item xs={12} md={6}>
-                        <Card sx={{ maxWidth: 900, width:900 }}> <CardContent>
+                        <Card sx={{ maxWidth: 900, width:900 }} elevation={5} style={{backgroundColor: "#f3e5f5"}}> <CardContent>
                         <Typography sx={{ mt: 4, mb: 2 }} color="secondary" variant="h6" component="div">
                             Banned users of this SubGreddit:
                         </Typography>

@@ -2,39 +2,32 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 // Create Schema
-const PostSchema = new Schema({
-    text: {
+const ReportSchema = new Schema({
+    pid: {
     type: String,
     required: true,
     unique: false,
   },
-  postedBy: {
-    type: String,
-    required: true,
-    unique: false,
-  },    
-  postedIn: {
-    type: String,
-    required: true,
-    unique: false,
-  },    
-  upvotes: {
+  sgid: {
     type: String,
     required: true,
     unique: false,
   },
-  downvotes: {
+  text : {
     type: String,
-    required: true,
-    unique: false,
-  },
-  comments:{
-    type : Array,
     required: false,
     unique: false,
+  },
+  concern : {
+    type: String,
+    required: true,
+    unique: false,     
+  },
+  reportedby : {
+    type: String,
+    required: true,
+    unique: false,  
   }
-
-
 });
 
-module.exports = Post = mongoose.model("Posts", PostSchema);
+module.exports = Report = mongoose.model("Report", ReportSchema);

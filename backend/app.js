@@ -12,14 +12,25 @@ var authenticateRouter = require("./routes/authenticate");
 var userinfoRouter = require("./routes/userinfo");
 var otheruserinfoRouter = require("./routes/otheruserinfo");
 var removeRouter = require("./routes/remove");
+var removeSavedPostbyId = require("./routes/removeSavedPostbyId");
 var createSubGredditRouter = require("./routes/createsubgreddit");
 var getUserSubGredditRouter = require("./routes/getUserSubGredditInfo");
 var getAllSubGredditRouter = require("./routes/getAllSubGredditInfo");
+var getJoinedSubgreddits = require("./routes/getJoinedSubgreddits");
 var getSubGredditInfobyIDRouter = require("./routes/getsubgredditbyid");
 var getPosts = require("./routes/getPosts.js");
 var getPostsbyId = require("./routes/getPostsbyId.js");
+var getPostsbyPostedIn = require("./routes/getPostsbyPostedIn.js");
 var createPost = require("./routes/createpost.js");
 var followUser = require("./routes/followUser.js");
+var savePost = require("./routes/savePost.js");
+var joinSubgreddit = require("./routes/joinSubgreddit.js");
+var requestSubgreddit = require("./routes/requestSubGreddit.js");
+var rejectUser = require("./routes/rejectUser.js");
+var leaveSubgreddit = require("./routes/leavesubgreddit.js");
+var addComments = require("./routes/addComments.js");
+var reportPost = require("./routes/reportPost.js");
+
 
 
 var app = express();
@@ -42,14 +53,24 @@ app.use('/auth', authenticateRouter);
 app.use('/userinfo', userinfoRouter);
 app.use('/otheruserinfo', otheruserinfoRouter);
 app.use('/remove', removeRouter);
+app.use('/removesavedpostbyid', removeSavedPostbyId);
 app.use('/createsubgreddit', createSubGredditRouter);
 app.use('/getusersubgreddit', getUserSubGredditRouter);
 app.use('/getallsubgreddit', getAllSubGredditRouter);
+app.use('/getjoinedsubgreddits', getJoinedSubgreddits);
 app.use('/getsubgredditbyid', getSubGredditInfobyIDRouter);
 app.use('/getposts', getPosts);
-app.use('/getpostsbyid', getPostsbyId);
+app.use('/getpostsbyid', getPostsbyId );
+app.use('/getpostsbypostedin', getPostsbyPostedIn);
 app.use('/createpost', createPost);
 app.use('/followUser', followUser);
+app.use('/savepost', savePost);
+app.use('/joinsubgreddit', joinSubgreddit);
+app.use('/requestsubgreddit', requestSubgreddit);
+app.use('/rejectuser', rejectUser);
+app.use('/leavesubgreddit', leaveSubgreddit);
+app.use('/addcomments', addComments);
+app.use('/reportpost', reportPost);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
