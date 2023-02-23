@@ -51,13 +51,18 @@ const SubGredditSchema = new Schema({
   creationDate : {
     type : Date,
     required : false,
-    unique : true
+    unique : false
   },
   reportedPosts : {
     type : Array,
     required : false,
-    unique : true
+    unique : false
   },
+  blockedpeople : {
+    type : Array,
+    required : false,
+    unique : false
+  }
 
 });
 

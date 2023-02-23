@@ -20,6 +20,7 @@ router.post('/', async (req, res) => {
     const newPost = new Post({
     text: req.body.text,
     postedBy: req.body.postedBy,
+    postedBy2: req.body.postedBy,
     postedIn: req.body.postedIn, 
     upvotes: req.body.upvotes,
     downvotes: req.body.downvotes

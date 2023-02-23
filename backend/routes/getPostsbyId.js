@@ -1,5 +1,7 @@
 var express = require('express');
 const Post = require('../models/post');
+const Subgreddit = require('../models/subgreddit');
+
 var router = express.Router();
 const mongoose = require('mongoose');
 
@@ -16,8 +18,15 @@ mongoose.connect("mongodb+srv://ishwar:shane123@cluster0.bt85bam.mongodb.net/?re
 router.post('/',auth, async (req, res) => {
   console.log(req.body.id);
     try {
-      const post = await Post.findOne({_id : req.body.id});
-      console.log("post = ",post);
+      const post = await Post.findOne({_id : req.body.id}).select('-postedBy2');
+      console.log("post = ",post);    
+
+      const subgreddit = await Subgreddit.findOne({_id : post.postedIn});
+      const index = subgreddit.blockedpeople.indexOf(post.postedBy);
+      console.log("index = ",index)
+      if(index > -1) {
+        post.postedBy = "[Blocked User]";
+      }
       res.status(200).json({post});
     } catch (error) {
         console.log("Post Info Unavailable")
