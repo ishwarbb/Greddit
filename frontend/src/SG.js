@@ -1,4 +1,4 @@
-import { Avatar, Button, Card, CardActions, CardContent, CardHeader, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, List, ListItem, ListItemAvatar, ListItemText, TextField } from "@mui/material";
+import { Avatar, Button, Card, CardActions, CardContent, CardHeader, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, List, ListItem, ListItemAvatar, ListItemText, Modal, TextField } from "@mui/material";
 import { red } from "@mui/material/colors";
 import { Box } from "@mui/system";
 import IconButton from '@mui/material/IconButton';
@@ -77,6 +77,13 @@ const SG = () => {
     const [reportedpid, setReportedPid] = useState(null);
     const [reportedtext, setReportedText] = useState(null);
 
+    const [openWarning, setOpenWarning] = useState(false);
+    const handleWarningOpen = () => setOpenWarning(true);
+    const handleWarningClose = () => {
+        setOpenWarning(false);
+        window.location.reload(true);
+    }
+
     const [commentForm, setCommentForm] = useState(null);
 
     const inputRef = useRef(null);
@@ -140,7 +147,18 @@ const SG = () => {
         console.log("posting=", postdata);
 
         handleClose();
+        // window.location.reload(true);
+
+        var text = data.get('text');
+        var x = subGredditData.bannedKeywords;
+        x = x.filter(a => text.trim().toLowerCase().includes(a.trim().toLowerCase()));
+        if(x.length > 0)
+        {
+            handleWarningOpen();
+        }else
+        {
         window.location.reload(true);
+        }
     };
 
     const handleSubmit2 = (event) => {
@@ -161,7 +179,7 @@ const SG = () => {
         console.log("reporting =", postdata);
 
         handleClose();
-        // window.location.reload(true);
+        window.location.reload(true);
     };
 
     const handleCommentSubmit = (event, post) => {
@@ -171,7 +189,9 @@ const SG = () => {
         console.log("comment = ", data.get('comment'));
         console.log("on post = ", commentForm);
 
-        addComments({ pid: commentForm, comment: data.get('comment') });
+        var comment = usrData.userName.fontcolor("green") + ":  " + data.get('comment');
+
+        addComments({ pid: commentForm, comment: comment });
         window.location.reload(true);
 
     }
@@ -270,6 +290,31 @@ const SG = () => {
                                     <Button type="submit" color="warning" >Report</Button>
                                 </DialogActions>
                             </Dialog>
+                            <Modal
+        open={openWarning}
+        onClose={handleWarningClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Card
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            // bgcolor: "background.paper",
+            bgcolor: "white",
+            border: "2px solid #000",
+            boxShadow: 24,
+            p: 4
+          }}
+        >
+          <Typography id="modal-modal-title" variant="h6" component="h2" color="warning">
+            Your post has banned keywords. It might get reported by community members and may get you blocked
+          </Typography>
+        </Card>
+      </Modal>
                             {
                                 posts.map((post) =>
                                 (
@@ -314,11 +359,14 @@ const SG = () => {
                                                 <Button color="secondary" onClick={() => savepost(post._id)}>
                                                     Save <SaveIcon />
                                                 </Button>
-                                                <Button color="secondary" onClick={() => followuser(post.postedBy)}>
+                                                <Button disabled={usrData.email === subGredditData.creator ? true : false}
+                                                color="secondary" onClick={() => followuser(post.postedBy)}>
                                                     Follow User <PersonAddAlt1Icon />
                                                 </Button>
                                                 {/* <Button color="secondary" onClick={() => reportPost(post._id,subGredditData._id)} > */}
-                                                <Button color="secondary" onClick={() => {
+                                                <Button color="secondary" 
+                                                disabled={usrData.email === subGredditData.creator ? true : false}
+                                                onClick={() => {
                                                     setReportedPid(post._id);
                                                     setReportedText(post.text);
                                                     handleClickOpen2();
@@ -360,7 +408,7 @@ const SG = () => {
                                                         <ListItemAvatar>
                                                             <Avatar alt="Profile Picture"> R </Avatar>
                                                         </ListItemAvatar>
-                                                        <ListItemText primary={usrData.userName} secondary={comment} />
+                                                        <ListItemText primary={comment}  />
                                                     </ListItem>
                                                 </List>
                                             ))

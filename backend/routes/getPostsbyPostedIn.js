@@ -30,6 +30,12 @@ router.post('/',auth, async (req, res) => {
         if(index > -1) {
           posts[i].postedBy = "[Blocked User]";
         }
+        var text = posts[i].text;
+        for(let i = 0; i < subgreddit.bannedKeywords.length; i++)
+        {
+          text = text.replace(subgreddit.bannedKeywords[i], '*'.repeat(subgreddit.bannedKeywords[i].length));
+        }
+        posts[i].text = text;
       }
 
       console.log("posts sending = ",posts);

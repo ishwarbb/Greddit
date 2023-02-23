@@ -21,12 +21,19 @@ router.post('/',auth, async (req, res) => {
       const post = await Post.findOne({_id : req.body.id}).select('-postedBy2');
       console.log("post = ",post);    
 
+      var text = post.text;
       const subgreddit = await Subgreddit.findOne({_id : post.postedIn});
       const index = subgreddit.blockedpeople.indexOf(post.postedBy);
       console.log("index = ",index)
       if(index > -1) {
         post.postedBy = "[Blocked User]";
       }
+      for(let i = 0; i < subgreddit.bannedKeywords.length; i++)
+      {
+        text = text.replace(subgreddit.bannedKeywords[i], '*'.repeat(subgreddit.bannedKeywords[i].length));
+      }
+      post.text = text;
+
       res.status(200).json({post});
     } catch (error) {
         console.log("Post Info Unavailable")

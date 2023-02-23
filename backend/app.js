@@ -31,8 +31,9 @@ var addComments = require("./routes/addComments.js");
 var reportPost = require("./routes/reportPost.js");
 var ignoreReport = require("./routes/ignorePost.js");
 var getReportbyId = require("./routes/getReportbyId.js");
-var test = require("./routes/test.js");
+var email = require("./routes/email.js");
 var blockUser = require("./routes/blockUser.js");
+var deletePost = require("./routes/deletePost.js");
 
 
 
@@ -76,8 +77,9 @@ app.use('/addcomments', addComments);
 app.use('/reportpost', reportPost);
 app.use('/ignorereport', ignoreReport);
 app.use('/getreportbyid', getReportbyId );
-app.use('/test', test );
+app.use('/email', email );
 app.use('/blockuser', blockUser );
+app.use('/deletepost', deletePost );
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -15,6 +15,8 @@ router.post('/',auth, async (req, res) => {
         const post = await Post.findOne({_id: req.body.pid});
         console.log("found p = ",post);
 
+        var now = new Date();
+
     const newReport = new Report({
         pid: req.body.pid,
         sgid: req.body.sgid,
@@ -22,7 +24,8 @@ router.post('/',auth, async (req, res) => {
         concern: req.body.concern, 
         reportedby : req.user.email,
         postedby : post.postedBy,
-        ignored : false
+        ignored : false,
+        creationdate : now
       });
 
 

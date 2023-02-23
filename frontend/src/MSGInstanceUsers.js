@@ -32,7 +32,7 @@ const MSGInstanceUsers = () => {
     
             setPeopleInfo(pinfo);
             console.log("pinfo = ",pinfo)
-            console.log("pinfo[a] = ",pinfo['ishwarbb25@gmail.com'].userName)
+            // console.log("pinfo[a] = ",pinfo['ishwarbb25@gmail.com'].userName)
         }
         if(b.bannedpeople !== undefined)
         {
