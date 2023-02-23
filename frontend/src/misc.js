@@ -92,24 +92,6 @@ export const getSubGredditInfobyID = async (id) => {
   }
 };
 
-export const getPosts = async () => {
-  const token = localStorage.getItem('token');
-
-  if (token) {
-    try {
-      axios.defaults.headers.common['x-auth-token'] = token;
-      const res = await axios.post(`/getposts`);
-      // console.log(res.data.user);
-      return res.data.post;
-      
-    } catch (err) {
-      console.error(err);
-    }
-  } else {
-    delete axios.defaults.headers.common['x-auth-token'];
-  }
-};
-
 export const getPostsbyPostedIn = async (id) => {
   const token = localStorage.getItem('token');
 
@@ -117,8 +99,8 @@ export const getPostsbyPostedIn = async (id) => {
     try {
       axios.defaults.headers.common['x-auth-token'] = token;
       const res = await axios.post(`/getpostsbypostedin`,id);
-      // console.log(res.data.user);
-      return res.data.post;
+      console.log("data rec = ",res.data);
+      return res.data.posts;
       
     } catch (err) {
       console.error(err);
@@ -274,3 +256,57 @@ export const addComments = async (object) => {
   }
 };
 
+export const IgnoreReport = async (object) => {
+  const token = localStorage.getItem('token');
+  console.log("ir = ",object);
+  if (token) {
+    try {
+      axios.defaults.headers.common['x-auth-token'] = token;
+      const res = await axios.post(`/ignorereport`,object);
+      console.log(res.data);
+      return res.data.post;
+      
+    } catch (err) {
+      console.error(err);
+    }
+  } else {
+    delete axios.defaults.headers.common['x-auth-token'];
+  }
+};
+
+export const getReportbyId = async (id) => {
+  const token = localStorage.getItem('token');
+
+  if (token) {
+    try {
+      axios.defaults.headers.common['x-auth-token'] = token;
+      const res = await axios.post(`/getreportbyid`,id);
+      // console.log(res.data.user);
+      return res.data.post;
+      
+    } catch (err) {
+      console.error(err);
+    }
+  } else {
+    delete axios.defaults.headers.common['x-auth-token'];
+  }
+};
+
+
+export const blockUser = async (id) => {
+  const token = localStorage.getItem('token');
+
+  if (token) {
+    try {
+      axios.defaults.headers.common['x-auth-token'] = token;
+      const res = await axios.post(`/blockuser`,id);
+      // console.log(res.data.user);
+      return res.data.post;
+      
+    } catch (err) {
+      console.error(err);
+    }
+  } else {
+    delete axios.defaults.headers.common['x-auth-token'];
+  }
+};

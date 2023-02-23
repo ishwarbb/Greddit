@@ -2,7 +2,7 @@ import { Avatar, Button, Card, CardActions, CardContent, CardHeader, Container, 
 import { red } from "@mui/material/colors";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getOtherUserInfo, getPostsbyId, getSubGredditInfobyID } from "./misc";
+import { blockUser, getOtherUserInfo, getReportbyId, getSubGredditInfobyID, IgnoreReport } from "./misc";
 import MSGInstanceBar from "./MSGInstanceBar";
 import { Box } from "@mui/system";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -17,14 +17,17 @@ import CommentIcon from '@mui/icons-material/Comment';
 import SaveIcon from '@mui/icons-material/Save';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import FlagIcon from '@mui/icons-material/Flag';
+import BlockIcon from '@mui/icons-material/Block';
+import NotificationsPausedIcon from '@mui/icons-material/NotificationsPaused';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 const MSGInstanceUsers = () => {
   let {id}  = useParams();
-  const [posts, setPosts] = useState([]);
   const [reportedPosts, setReportedPosts] = useState([]);
-  const [postsInfo, setPostsInfo] = useState({});
+  const [reportsInfo, setReportsInfo] = useState({});
   const [subgreddits, setSubgreddits] = useState([]);
+  const [cancelBlock, setCancelBlock] = useState(0);
 
 
   useEffect(() => {
@@ -36,24 +39,45 @@ const MSGInstanceUsers = () => {
         setReportedPosts(b.reportedPosts);
         if(b.reportedPosts !== undefined) 
         {
-            setPosts(b.reportedPosts);
+            setReportedPosts(b.reportedPosts);
             var pinfo = {};
             console.log("posts = ",b.reportedPosts);
             for(let i =0 ; i < b.reportedPosts.length; i++)
             {
-                const otheruser = await getPostsbyId({id:b.reportedPosts[i].pid});
+                const otheruser = await getReportbyId({id:b.reportedPosts[i]});
                 console.log("-- ",otheruser)
                 pinfo[b.reportedPosts[i]] = otheruser;
             }
     
-            setPostsInfo(pinfo);
+            setReportsInfo(pinfo);
             console.log("pinfo = ",pinfo)
             // console.log("pinfo[a] = ",pinfo['ishwarbb25@gmail.com'].userName)
         }
     }
-
     promiseB();
 },[]);
+
+    const handleBlockUser = (sgid,blockeduser,rid) => {
+        var time = 10;
+
+        setInterval(() => {
+            setCancelBlock(time);
+            time--;
+
+            console.log("Hewwo");
+
+            if(time === -1)
+            {
+                console.log("Hello");
+                blockUser({
+                    sgid : sgid,
+                    blockeduser : blockeduser,
+                    rid : rid
+                })
+                window.location.reload(true);  
+            }
+        },1000);
+    };
 
     return ( 
         <div>
@@ -88,17 +112,53 @@ const MSGInstanceUsers = () => {
                                                         <MoreVertIcon />
                                                     </IconButton>
                                                 }
-                                                title={"Reported by " + report.reportedby }
-                                                subheader={"Post id = " + report.pid}
+                                                title={reportsInfo[report] ? "Reported by " + reportsInfo[report].reportedby : "-"}
+                                                subheader={reportsInfo[report] ? "Posted by " + reportsInfo[report].postedby : "-"}
+                                                // subheader={reportsInfo[report] ? "Post id = " + reportsInfo[report].pid : "-"}
                                             />
                                             <CardContent>
                                                 <Typography gutterBottom maxWidth={900} paragraph sx={{ color: red[500] }}>
-                                                    Concern : {report.concern}
+                                                    Concern : {reportsInfo[report] ? reportsInfo[report].concern : "-"}
                                                 </Typography>
                                                 <Typography gutterBottom maxWidth={900} paragraph>
-                                                    Text : {report.text + "hewwo"}
+                                                    Text : {reportsInfo[report] ? reportsInfo[report].text: "-"}
                                                 </Typography>
                                             </CardContent>
+                                            {reportsInfo[report] ? (!reportsInfo[report].ignored ? 
+                                            (<CardActions>
+                                                {(cancelBlock === 0) ? 
+                                                (<Button color="secondary" onClick={() => {
+                                                    // blockUser({
+                                                    //     sgid : subgreddits._id,
+                                                    //     blockeduser : reportsInfo[report].postedby
+                                                    // })
+                                                    handleBlockUser(subgreddits._id,reportsInfo[report].postedby,reportsInfo[report]._id);
+                                                }} >
+                                                    Block User <BlockIcon />
+                                                </Button>)
+                                                :
+                                                (<Button color="secondary" variant="outlined" onClick={() => {window.location.reload(true);}} >
+                                                    Cancel in {cancelBlock} <CloseIcon />
+                                                </Button>)
+                                            }
+                                                <Button color="secondary">
+                                                    Delete Post <DeleteIcon />
+                                                </Button>
+                                                <Button color="secondary" onClick={() => {
+                                                    IgnoreReport(reportsInfo[report]);
+                                                    window.location.reload(true);                                                   
+                                                }}>
+                                                    Ignore <NotificationsPausedIcon />
+                                                </Button>
+                                            </CardActions>) 
+                                            :
+                                            (<CardActions>
+                                                <Button color="secondary" disabled>
+                                                    Ignored <NotificationsPausedIcon />
+                                                </Button>
+                                            </CardActions>) )
+                                            : ""
+                                            }
                                         </Card>
                                         <br></br>
                                     </>

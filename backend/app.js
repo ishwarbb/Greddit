@@ -18,7 +18,6 @@ var getUserSubGredditRouter = require("./routes/getUserSubGredditInfo");
 var getAllSubGredditRouter = require("./routes/getAllSubGredditInfo");
 var getJoinedSubgreddits = require("./routes/getJoinedSubgreddits");
 var getSubGredditInfobyIDRouter = require("./routes/getsubgredditbyid");
-var getPosts = require("./routes/getPosts.js");
 var getPostsbyId = require("./routes/getPostsbyId.js");
 var getPostsbyPostedIn = require("./routes/getPostsbyPostedIn.js");
 var createPost = require("./routes/createpost.js");
@@ -30,6 +29,11 @@ var rejectUser = require("./routes/rejectUser.js");
 var leaveSubgreddit = require("./routes/leavesubgreddit.js");
 var addComments = require("./routes/addComments.js");
 var reportPost = require("./routes/reportPost.js");
+var ignoreReport = require("./routes/ignorePost.js");
+var getReportbyId = require("./routes/getReportbyId.js");
+var test = require("./routes/test.js");
+var blockUser = require("./routes/blockUser.js");
+
 
 
 
@@ -59,7 +63,6 @@ app.use('/getusersubgreddit', getUserSubGredditRouter);
 app.use('/getallsubgreddit', getAllSubGredditRouter);
 app.use('/getjoinedsubgreddits', getJoinedSubgreddits);
 app.use('/getsubgredditbyid', getSubGredditInfobyIDRouter);
-app.use('/getposts', getPosts);
 app.use('/getpostsbyid', getPostsbyId );
 app.use('/getpostsbypostedin', getPostsbyPostedIn);
 app.use('/createpost', createPost);
@@ -71,6 +74,10 @@ app.use('/rejectuser', rejectUser);
 app.use('/leavesubgreddit', leaveSubgreddit);
 app.use('/addcomments', addComments);
 app.use('/reportpost', reportPost);
+app.use('/ignorereport', ignoreReport);
+app.use('/getreportbyid', getReportbyId );
+app.use('/test', test );
+app.use('/blockuser', blockUser );
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -27,6 +27,16 @@ const ReportSchema = new Schema({
     type: String,
     required: true,
     unique: false,  
+  },
+  postedby : {
+    type: String,
+    required: true,
+    unique: false,  
+  },
+  ignored:{
+    type : Boolean,
+    required: false,
+    unique: false,
   }
 });
 

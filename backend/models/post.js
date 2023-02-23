@@ -13,6 +13,11 @@ const PostSchema = new Schema({
     required: true,
     unique: false,
   },    
+  postedBy2: {
+    type: String,
+    required: true,
+    unique: false,
+  },    
   postedIn: {
     type: String,
     required: true,
@@ -32,8 +37,7 @@ const PostSchema = new Schema({
     type : Array,
     required: false,
     unique: false,
-  }
-
+  },
 
 });
 

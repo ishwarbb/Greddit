@@ -75,6 +75,7 @@ const SG = () => {
     const [posts, setPosts] = useState([]);
     const [subGredditData, setSubGredditData] = useState([]);
     const [reportedpid, setReportedPid] = useState(null);
+    const [reportedtext, setReportedText] = useState(null);
 
     const [commentForm, setCommentForm] = useState(null);
 
@@ -152,14 +153,15 @@ const SG = () => {
         let postdata = {
             pid: reportedpid,
             sgid: subGredditData._id,
-            concern: data.get('concern')
+            concern: data.get('concern'),
+            text: reportedtext
         };
 
         reportPost(postdata);
         console.log("reporting =", postdata);
 
         handleClose();
-        window.location.reload(true);
+        // window.location.reload(true);
     };
 
     const handleCommentSubmit = (event, post) => {
@@ -318,6 +320,7 @@ const SG = () => {
                                                 {/* <Button color="secondary" onClick={() => reportPost(post._id,subGredditData._id)} > */}
                                                 <Button color="secondary" onClick={() => {
                                                     setReportedPid(post._id);
+                                                    setReportedText(post.text);
                                                     handleClickOpen2();
                                                 }} >
                                                     Report <FlagIcon />
