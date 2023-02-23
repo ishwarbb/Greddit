@@ -282,6 +282,11 @@ export const getReportbyId = async (id) => {
       axios.defaults.headers.common['x-auth-token'] = token;
       const res = await axios.post(`/getreportbyid`,id);
       // console.log(res.data.user);
+      if(res.status === 111)
+      {
+        return 111;
+      }
+
       return res.data.post;
       
     } catch (err) {
@@ -300,6 +305,43 @@ export const blockUser = async (id) => {
     try {
       axios.defaults.headers.common['x-auth-token'] = token;
       const res = await axios.post(`/blockuser`,id);
+      // console.log(res.data.user);
+      return res.data.post;
+      
+    } catch (err) {
+      console.error(err);
+    }
+  } else {
+    delete axios.defaults.headers.common['x-auth-token'];
+  }
+};
+
+export const deletePost = async (id) => {
+  const token = localStorage.getItem('token');
+
+  if (token) {
+    try {
+      axios.defaults.headers.common['x-auth-token'] = token;
+      const res = await axios.post(`/deletepost`,id);
+      // console.log(res.data.user);
+      return res.data.post;
+      
+    } catch (err) {
+      console.error(err);
+    }
+  } else {
+    delete axios.defaults.headers.common['x-auth-token'];
+  }
+};
+
+
+export const mail = async (id) => {
+  const token = localStorage.getItem('token');
+
+  if (token) {
+    try {
+      axios.defaults.headers.common['x-auth-token'] = token;
+      const res = await axios.post(`/email`,id);
       // console.log(res.data.user);
       return res.data.post;
       

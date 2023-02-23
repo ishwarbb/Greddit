@@ -117,7 +117,7 @@ const SubGredditsPage = () => {
 
 
     useEffect(() => {
-        var newSubgreddits = subgreddits.filter(a => a.name.includes(search.trim().toLowerCase()));
+        var newSubgreddits = subgreddits.filter(a => a.name.trim().toLowerCase().includes(search.trim().toLowerCase()));
         var appliedTags = tags.split(',').map(item => item.trim().toLowerCase());
         console.log(appliedTags);
         console.log(appliedTags === ['']);

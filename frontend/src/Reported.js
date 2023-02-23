@@ -2,7 +2,7 @@ import { Avatar, Button, Card, CardActions, CardContent, CardHeader, Container, 
 import { red } from "@mui/material/colors";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { blockUser, getOtherUserInfo, getReportbyId, getSubGredditInfobyID, IgnoreReport } from "./misc";
+import { blockUser, deletePost, getOtherUserInfo, getReportbyId, getSubGredditInfobyID, IgnoreReport, mail } from "./misc";
 import MSGInstanceBar from "./MSGInstanceBar";
 import { Box } from "@mui/system";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -28,6 +28,7 @@ const MSGInstanceUsers = () => {
   const [reportsInfo, setReportsInfo] = useState({});
   const [subgreddits, setSubgreddits] = useState([]);
   const [cancelBlock, setCancelBlock] = useState(0);
+  const [reportBlocked, setReportBlocked] = useState(null);
 
 
   useEffect(() => {
@@ -45,6 +46,10 @@ const MSGInstanceUsers = () => {
             for(let i =0 ; i < b.reportedPosts.length; i++)
             {
                 const otheruser = await getReportbyId({id:b.reportedPosts[i]});
+                if(otheruser === 111)
+                {
+                    window.location.reload(true);
+                }
                 console.log("-- ",otheruser)
                 pinfo[b.reportedPosts[i]] = otheruser;
             }
@@ -59,6 +64,7 @@ const MSGInstanceUsers = () => {
 
     const handleBlockUser = (sgid,blockeduser,rid) => {
         var time = 10;
+        setReportBlocked(rid);
 
         setInterval(() => {
             setCancelBlock(time);
@@ -100,7 +106,7 @@ const MSGInstanceUsers = () => {
                                 reportedPosts.map((report) =>
                                 (
                                     <>
-                                        <Card sx={{ maxWidth: 860, width: 860 }} >
+                                        <Card sx={{ maxWidth: 860, width: 860 }} style={{backgroundColor: "#e3f2fd"}}>
                                             <CardHeader
                                                 avatar={
                                                     <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
@@ -126,26 +132,57 @@ const MSGInstanceUsers = () => {
                                             </CardContent>
                                             {reportsInfo[report] ? (!reportsInfo[report].ignored ? 
                                             (<CardActions>
-                                                {(cancelBlock === 0) ? 
+                                                {(cancelBlock === 0) || (reportBlocked !== reportsInfo[report]._id)? 
                                                 (<Button color="secondary" onClick={() => {
                                                     // blockUser({
                                                     //     sgid : subgreddits._id,
                                                     //     blockeduser : reportsInfo[report].postedby
                                                     // })
                                                     handleBlockUser(subgreddits._id,reportsInfo[report].postedby,reportsInfo[report]._id);
+                                                    mail({
+                                                        target:reportsInfo[report].reportedby,
+                                                        subject: "Reg: Recent Report",
+                                                        text: "The concerned person has been Blocked"
+                                                    });
+                                                    mail({
+                                                        target:reportsInfo[report].postedby,
+                                                        subject: "Reg: Your Post has been reported",
+                                                        text: "Your post has been reported and You have been blocked"
+                                                        })
                                                 }} >
                                                     Block User <BlockIcon />
                                                 </Button>)
-                                                :
+                                                : 
                                                 (<Button color="secondary" variant="outlined" onClick={() => {window.location.reload(true);}} >
                                                     Cancel in {cancelBlock} <CloseIcon />
                                                 </Button>)
                                             }
-                                                <Button color="secondary">
+                                                <Button color="secondary" onClick={() => {
+                                                    deletePost({
+                                                        pid : reportsInfo[report].pid, 
+                                                        rid : reportsInfo[report]._id 
+                                                    });
+                                                    mail({
+                                                        target:reportsInfo[report].reportedby,
+                                                        subject: "Reg: Recent Report",
+                                                        text: "The concerned post has been Deleted"
+                                                    });
+                                                    mail({
+                                                        target:reportsInfo[report].postedby,
+                                                        subject: "Reg: Your Post has been reported",
+                                                        text: "Your post has been reported and Deleted"
+                                                    })
+                                                    window.location.reload(true);                                                   
+                                                }} >
                                                     Delete Post <DeleteIcon />
                                                 </Button>
                                                 <Button color="secondary" onClick={() => {
                                                     IgnoreReport(reportsInfo[report]);
+                                                    mail({
+                                                        target:reportsInfo[report].reportedby,
+                                                        subject: "Reg: Recent Report",
+                                                        text: "Sorry, your report has been ignored by the mods."
+                                                        })
                                                     window.location.reload(true);                                                   
                                                 }}>
                                                     Ignore <NotificationsPausedIcon />

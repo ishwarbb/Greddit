@@ -4,8 +4,11 @@ var express = require('express');
 var router = express.Router();
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-    console.log("hello");
+router.post('/', function(req, res, next) {
+  try{
+    console.log(req.body.target);
+    console.log(req.body.subject);
+    console.log(req.body.text);
 
 var transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -20,9 +23,9 @@ var transporter = nodemailer.createTransport({
   
   var mailOptions = {
     from: 'ishwarbb24@gmail.com',
-    to: 'ishwarbb25@gmail.com',
-    subject: 'Sending Email using Node.js',
-    text: 'That was easy!'
+    to: req.body.target,
+    subject: req.body.subject,
+    text: req.body.text
   };
   
   transporter.sendMail(mailOptions, function(error, info){
@@ -32,8 +35,12 @@ var transporter = nodemailer.createTransport({
       console.log('Email sent: ' + info.response);
     }
   });
-
-    res.send('respond with a resource');
+  }
+  catch (err) {
+    console.error('Email error') ;
+    res.status(500).json({ msg: 'Server Error' });
+  }
+    // res.send('respond with a resource');
 });
 
 module.exports = router;

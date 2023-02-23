@@ -37,7 +37,12 @@ const ReportSchema = new Schema({
     type : Boolean,
     required: false,
     unique: false,
-  }
+  },
+  creationdate:{
+    type : Date,
+    required: false,
+    unique: false,
+  },
 });
 
 module.exports = Report = mongoose.model("Report", ReportSchema);
