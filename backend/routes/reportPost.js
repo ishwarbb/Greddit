@@ -7,8 +7,9 @@ const SubGreddit = require("../models/subgreddit.js");
 const Report = require("../models/report.js");
 
 const auth = require('./middleware');
+const updaterp = require('./updaterp');
 
-router.post('/',auth, async (req, res) => {
+router.post('/',auth,updaterp, async (req, res) => {
     console.log(req.body.pid);
     console.log(req.body.sgid);
     try {

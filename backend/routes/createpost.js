@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 const mongoose = require('mongoose');
 var jwt = require('jsonwebtoken');
+const auth = require('./middleware');
+const updatedpvd = require('./updatedpvd');
 
 
 const Post = require("../models/post.js");
@@ -16,7 +18,7 @@ mongoose.connect("mongodb+srv://ishwar:shane123@cluster0.bt85bam.mongodb.net/?re
         });
 
 
-router.post('/', async (req, res) => {
+router.post('/', auth, updatedpvd, async (req, res) => {
     const newPost = new Post({
     text: req.body.text,
     postedBy: req.body.postedBy,

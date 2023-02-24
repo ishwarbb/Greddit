@@ -14,6 +14,7 @@ export default function SGBar() {
     console.log(data);
   };
 
+  // if(!usrData) return <Auth/>
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar

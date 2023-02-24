@@ -17,7 +17,8 @@ import axios from 'axios';
 
 export default function Followers(props) {
   const { onClose, open, followers, user } = props;
-  var followerEmails = followers.concat( ['admin@admin']);
+  // var followerEmails = followers.concat( ['admin@admin']);
+  var followerEmails = followers;
 
   const handleClose = () => {
     onClose(false);
@@ -42,6 +43,7 @@ export default function Followers(props) {
               <ListItemText primary={email} />
             </ListItemButton>
             <Button> 
+              Remove
                   <UnsubscribeIcon fontSize="large"sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, color: red[500] }}
                     onClick={() => {
                         axios.post('/remove/removefollowers', { personRemoving : user, personToBeRemoved : email });

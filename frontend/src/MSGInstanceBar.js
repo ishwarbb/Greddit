@@ -7,7 +7,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import { useParams } from 'react-router-dom';
-import { getSubGredditInfobyID } from './misc';
+import { getSubGredditInfobyID, getUserInfo } from './misc';
+import Auth from './Auth';
 
 const pages = ['Users', 'Join-Requests', 'Stats','Reported'];
 
@@ -15,6 +16,7 @@ const pages = ['Users', 'Join-Requests', 'Stats','Reported'];
 function MSGInstanceBar() {
   
   let {id}  = useParams();
+const [usrData, setUsrData] = React.useState(null);
 
   const path = {
     'Users' : '/mysubgreddits/' + id + "/users", 
@@ -28,6 +30,9 @@ function MSGInstanceBar() {
 
   React.useEffect(() => {
     let promiseB = async () => {
+      const a = await getUserInfo();
+      console.log(a);
+      setUsrData(a);
         const b = await getSubGredditInfobyID({id : id});
         console.log(b);
         setSubgreddits(b);
@@ -36,6 +41,7 @@ function MSGInstanceBar() {
     promiseB();
 },[]);
 
+  if(!usrData) return <Auth/> 
   return (
     <AppBar position="static" sx={{marginTop : '95px',backgroundColor: "#773183"}} >
       <Container maxWidth="xl">

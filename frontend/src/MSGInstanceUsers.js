@@ -1,11 +1,13 @@
 import { Avatar, Card, CardContent, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getOtherUserInfo, getSubGredditInfobyID } from "./misc";
+import Auth from "./Auth";
+import { getOtherUserInfo, getSubGredditInfobyID, getUserInfo } from "./misc";
 import MSGInstanceBar from "./MSGInstanceBar";
 
 const MSGInstanceUsers = () => {
   let {id}  = useParams();
+  const [usrData, setUsrData] = useState(null);
   const [people, setPeople] = useState([]);
   const [peopleInfo, setPeopleInfo] = useState({});
   const [bannedpeople, setBannedPeople] = useState([]);
@@ -14,10 +16,13 @@ const MSGInstanceUsers = () => {
 
   useEffect(() => {
     let promiseB = async () => {
+        const a = await getUserInfo();
+        console.log(a);
+        setUsrData(a);
         const b = await getSubGredditInfobyID({id : id});
         console.log(b);
         console.log(b.people);
-        console.log(b.bannedpeople);
+        console.log(b.blockedpeople);
         setSubgreddits(b);
         if(b.people !== undefined) 
         {
@@ -37,7 +42,7 @@ const MSGInstanceUsers = () => {
         if(b.bannedpeople !== undefined)
         {
           console.log("HI")
-          setBannedPeople(b.bannedpeople);
+          setBannedPeople(b.blockedpeople);
         }
 
 
@@ -46,6 +51,7 @@ const MSGInstanceUsers = () => {
     promiseB();
 },[]);
 
+    if(!usrData) return <Auth/>
     return ( 
         <div>
             <MSGInstanceBar/>
@@ -83,7 +89,7 @@ const MSGInstanceUsers = () => {
                         <Grid item xs={12} md={6}>
                         <Card sx={{ maxWidth: 900, width:900 }} elevation={5} style={{backgroundColor: "#f3e5f5"}}> <CardContent>
                         <Typography sx={{ mt: 4, mb: 2 }} color="secondary" variant="h6" component="div">
-                            Banned users of this SubGreddit:
+                            Blocked users of this SubGreddit:
                         </Typography>
                             <List >
                             {bannedpeople.map( a => (

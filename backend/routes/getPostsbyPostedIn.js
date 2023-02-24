@@ -5,6 +5,7 @@ var router = express.Router();
 const mongoose = require('mongoose');
 
 const auth = require('./middleware');
+const updatedvvd = require('./updatedvvd');
 
 mongoose.connect("mongodb+srv://ishwar:shane123@cluster0.bt85bam.mongodb.net/?retryWrites=true&w=majority")
         .then(() => {
@@ -14,7 +15,7 @@ mongoose.connect("mongodb+srv://ishwar:shane123@cluster0.bt85bam.mongodb.net/?re
           console.log("MongoDB database connection error !", err);
         });
 
-router.post('/',auth, async (req, res) => {
+router.post('/',auth,updatedvvd,async (req, res) => {
     try {
       const posts = await Post.find({postedIn : req.body.id}).select('-postedBy2');
       console.log("postss = ",posts);

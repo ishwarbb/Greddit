@@ -20,9 +20,11 @@ import FlagIcon from '@mui/icons-material/Flag';
 import BlockIcon from '@mui/icons-material/Block';
 import NotificationsPausedIcon from '@mui/icons-material/NotificationsPaused';
 import CloseIcon from '@mui/icons-material/Close';
+import Auth from "./Auth";
 
 
 const MSGInstanceUsers = () => {
+    const [usrData, setUsrData] = useState(null);
   let {id}  = useParams();
   const [reportedPosts, setReportedPosts] = useState([]);
   const [reportsInfo, setReportsInfo] = useState({});
@@ -33,6 +35,9 @@ const MSGInstanceUsers = () => {
 
   useEffect(() => {
     let promiseB = async () => {
+        const a = await getUserInfo();
+        console.log(a);
+        setUsrData(a);
         const b = await getSubGredditInfobyID({id : id});
         console.log("b = ",b);
         console.log(b.reportedPosts);
@@ -85,6 +90,7 @@ const MSGInstanceUsers = () => {
         },1000);
     };
 
+    if(!usrData) return <Auth/>
     return ( 
         <div>
             <MSGInstanceBar/>
@@ -160,7 +166,8 @@ const MSGInstanceUsers = () => {
                                                 <Button color="secondary" onClick={() => {
                                                     deletePost({
                                                         pid : reportsInfo[report].pid, 
-                                                        rid : reportsInfo[report]._id 
+                                                        rid : reportsInfo[report]._id,
+                                                        sgid : subgreddits._id
                                                     });
                                                     mail({
                                                         target:reportsInfo[report].reportedby,
