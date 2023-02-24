@@ -1,4 +1,4 @@
-import { Grid, Typography } from "@mui/material";
+import { Box, CircularProgress, Grid, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
 const Auth = () => {
@@ -15,8 +15,12 @@ const Auth = () => {
         justifyContent="center"
         style={{ minHeight: '100vh' }}
     >
-        <Typography variant="h4">
-            You are NOT logged in
+        {/* <Box sx={{ display: "flex", justifyContent: "center", mt: "20em" }}> */}
+              <CircularProgress size={100} />
+        {/* </Box> */}
+        <br></br>
+        <Typography variant="h6">
+            Looks like are NOT logged in
         </Typography>
         <Typography>
             {/* Please {mylink("/login", "login")}if you wish to use this website. */}
