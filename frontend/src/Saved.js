@@ -13,6 +13,7 @@ import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import CommentIcon from '@mui/icons-material/Comment';
 import SaveIcon from '@mui/icons-material/Save';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import Auth from "./Auth";
 
 const SavedPosts = () => {
     const [usrData, setUsrData] = useState(null);
@@ -47,7 +48,7 @@ const SavedPosts = () => {
         promiseB();
     }, []);
 
-
+    if(!usrData) return <Auth/>
     return (
         <>
             <Box marginTop='150px' marginLeft='100px' marginBottom='50px' alignItems="center" justifyContent="center" >
@@ -78,8 +79,8 @@ const SavedPosts = () => {
                                         </IconButton>
                                     }
                                     // title="Shrimp and Chorizo Paella"
-                                    title={postInfo[savedPost] ? "Posted by " + postInfo[savedPost].postedBy : "-"}
-                                    subheader={postInfo[savedPost] ? "Posted in " + postInfo[savedPost].postedIn : "-"}
+                                    title={postInfo[savedPost] ? "Posted by " + postInfo[savedPost].postedBy : "This Post is Unavailable"}
+                                    subheader={postInfo[savedPost] ? "Posted in " + postInfo[savedPost].postedIn : "This Post is Unavailable"}
                                 />
                                 <CardContent>
                                     <Typography variant="body2" color="text.secondary">
@@ -89,7 +90,7 @@ const SavedPosts = () => {
                                         {/* Banned KeyWords: {subgreddit.bannedKeywords.join(", ")} */}
                                     </Typography>
                                     <Typography gutterBottom maxWidth={900} paragraph>
-                                          {postInfo[savedPost] ? postInfo[savedPost].text : "-"}
+                                          {postInfo[savedPost] ? postInfo[savedPost].text : "This Post is Unavailable"}
                                     </Typography>
                                 </CardContent>
                                 <CardActions disableSpacing>

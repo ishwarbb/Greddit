@@ -62,8 +62,17 @@ const SubGredditSchema = new Schema({
     type : Array,
     required : false,
     unique : false
-  }
-
+  },
+  image : {
+    data: Buffer, 
+    contentType: String ,
+    unique : false
+  },
+  statid : {
+    data: String, 
+    contentType: String ,
+    unique : false
+  },
 });
 
 module.exports = SubGreddit = mongoose.model("SubGreddits", SubGredditSchema);

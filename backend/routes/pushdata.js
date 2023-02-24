@@ -48,6 +48,7 @@ mongoose.connect("mongodb+srv://ishwar:shane123@cluster0.bt85bam.mongodb.net/?re
 //     });
 // });
 
+const auth = require('./middleware');
 router.post('/', async (req, res) => {
     const newUser = new User({
     firstName: req.body.firstname,

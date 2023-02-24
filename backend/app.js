@@ -3,9 +3,9 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var multer = require('multer');
+var fs = require('fs');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 var pushdataRouter = require("./routes/pushdata");
 var updatedataRouter = require("./routes/updatedata");
 var authenticateRouter = require("./routes/authenticate");
@@ -34,24 +34,23 @@ var getReportbyId = require("./routes/getReportbyId.js");
 var email = require("./routes/email.js");
 var blockUser = require("./routes/blockUser.js");
 var deletePost = require("./routes/deletePost.js");
+var deleteSubgreddit = require("./routes/deletesubgreddit.js");
+var getStatbyId = require("./routes/getstatbyid.js");
 
 
-
-
-var app = express();
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-
+var app = express();;
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+// app.use(multer({ dest: './uploads/',
+//   rename: function (fieldname, filename) {
+//     return filename;
+//   },
+// }));
+
 app.use('/pushdata', pushdataRouter);
 app.use('/updatedata', updatedataRouter);
 app.use('/auth', authenticateRouter);
@@ -80,11 +79,15 @@ app.use('/getreportbyid', getReportbyId );
 app.use('/email', email );
 app.use('/blockuser', blockUser );
 app.use('/deletepost', deletePost );
+app.use('/deletesubgreddit', deleteSubgreddit );
+app.use('/getstatbyid', getStatbyId );
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
+app.set('view engine', 'jade');
 
 // error handler
 app.use(function(err, req, res, next) {

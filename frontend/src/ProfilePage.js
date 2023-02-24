@@ -4,6 +4,7 @@ import Followers from "./Followers";
 import Following from "./Following";
 import axios from "axios";
 import { getUserInfo } from "./misc";
+import Auth from "./Auth";
 
 async function updateData(reqdata)
 {
@@ -80,29 +81,6 @@ const ProfilePage = () => {
     const [openFollowers, setOpenFollowers] = useState(false);
     const [openFollowing, setOpenFollowing] = useState(false);
 
-
-    if (localStorage.getItem('token') === null) {
-        return (
-            <Grid
-                container
-                spacing={0}
-                direction="column"
-                alignItems="center"
-                justifyContent="center"
-                style={{ minHeight: '100vh' }}
-            >
-                <Typography variant="h4">
-                    You are NOT logged in
-                </Typography>
-                <Typography>
-                    Please {mylink("/login", "login")}if you want to view your profile.
-                </Typography>
-            </Grid>
-        );
-    }
-
-    // let userdata = localStorage.getItem(loggedinUser);
-    // userdata = JSON.parse(userdata)
 
     let userdata = loggedinUser;
 
@@ -218,6 +196,7 @@ const ProfilePage = () => {
     
         );
       }
+    else if(!usrData) return <Auth/>
     else{
     return (
         <Grid
@@ -238,10 +217,10 @@ const ProfilePage = () => {
                 paddingTop={2}
             >
                 <Button onClick={handleClickOpenFollowers}>
-                    Followers : {usrData.followers.length + 1}
+                    Followers : {usrData.followers.length }
                 </Button>
                 <Button onClick={handleClickOpenFollowing}>
-                    Following : {usrData.following.length + 1}
+                    Following : {usrData.following.length }
                 </Button>
             </Grid>
 

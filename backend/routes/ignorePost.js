@@ -4,7 +4,8 @@ const mongoose = require('mongoose');
 
 const Report = require("../models/report.js");
 
-router.post("/", (req, res) => {
+const auth = require('./middleware');
+router.post("/",auth, (req, res) => {
   console.log(req.body);
   console.log(req.body._id);
 

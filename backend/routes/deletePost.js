@@ -2,16 +2,19 @@ var express = require('express');
 var router = express.Router();
 const mongoose = require('mongoose');
 var jwt = require('jsonwebtoken');
+const auth = require('./middleware');
 
 
 const Post = require("../models/post.js");
 const SubGreddit = require("../models/subgreddit.js");
 const Report = require("../models/report.js");
 
+const updatedp = require('./updatedp');
 
-router.post('/', async (req, res) => {
+router.post('/',auth,updatedp, async (req, res) => {
     console.log(req.body.pid);
     console.log(req.body.rid);
+    console.log(req.body.sgid);
   try {
     const post = await Post.findOne({_id : req.body.pid});
 

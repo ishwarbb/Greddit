@@ -44,7 +44,7 @@ router.post('/',auth,clearReport, async (req, res) => {
       //   });
       //   return;
       // }
-      console.log("post = ",post);
+      console.log("report = ",post);
       res.status(200).json({post});
     } catch (error) {
         console.log("Report Info Unavailable")

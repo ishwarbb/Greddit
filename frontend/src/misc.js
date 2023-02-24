@@ -119,6 +119,11 @@ export const getPostsbyId = async (id) => {
       axios.defaults.headers.common['x-auth-token'] = token;
       const res = await axios.post(`/getpostsbyid`,id);
       // console.log(res.data.user);
+      if(res.status === 111)
+      {
+        return 111;
+      }
+
       return res.data.post;
       
     } catch (err) {
@@ -343,6 +348,59 @@ export const mail = async (id) => {
       axios.defaults.headers.common['x-auth-token'] = token;
       const res = await axios.post(`/email`,id);
       // console.log(res.data.user);
+      return res.data.post;
+      
+    } catch (err) {
+      console.error(err);
+    }
+  } else {
+    delete axios.defaults.headers.common['x-auth-token'];
+  }
+};
+
+
+export const deleteSubGreddit = async (id) => {
+  const token = localStorage.getItem('token');
+
+  if (token) {
+    try {
+      axios.defaults.headers.common['x-auth-token'] = token;
+      const res = await axios.post(`/deletesubgreddit`,id);
+      console.log(res.data);
+      return res.data;
+      
+    } catch (err) {
+      console.error(err);
+    }
+  } else {
+    delete axios.defaults.headers.common['x-auth-token'];
+  }
+};
+
+export const getStatbyId = async (id) => {
+  const token = localStorage.getItem('token');
+
+  if (token) {
+    try {
+      axios.defaults.headers.common['x-auth-token'] = token;
+      const res = await axios.post(`/getstatbyid`,id);
+      return res.data.post;
+      
+    } catch (err) {
+      console.error(err);
+    }
+  } else {
+    delete axios.defaults.headers.common['x-auth-token'];
+  }
+};
+
+export const UpdateDVVD = async (id) => {
+  const token = localStorage.getItem('token');
+
+  if (token) {
+    try {
+      axios.defaults.headers.common['x-auth-token'] = token;
+      const res = await axios.post(`/updatedvvd`,id);
       return res.data.post;
       
     } catch (err) {

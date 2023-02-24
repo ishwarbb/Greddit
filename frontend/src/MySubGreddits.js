@@ -10,7 +10,8 @@ import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import OpenInBrowserIcon from '@mui/icons-material/OpenInBrowser';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from "axios";
-import { getUserGredditInfo, getUserInfo } from "./misc";
+import { deleteSubGreddit, getUserGredditInfo, getUserInfo } from "./misc";
+import Auth from "./Auth";
 
 async function createSubgreddits(data)
 {
@@ -80,6 +81,7 @@ const MyGreddits = () => {
         window.location.reload(true);
     };
 
+    if(!usrData) return <Auth/>
     return ( 
         <>
         <Box  marginTop='150px' marginLeft='100px' marginBottom='50px' alignItems="center" justifyContent="center" >
@@ -186,7 +188,10 @@ const MyGreddits = () => {
                 <Button color="secondary" onClick={()=> window.location.replace("/mysubgreddits/"+subgreddit._id + "/users") }>
                     Open <OpenInBrowserIcon/>
                 </Button>
-                <Button color="secondary">
+                <Button color="secondary" onClick={()=> {
+                    deleteSubGreddit({sgid : subgreddit._id});
+                    window.location.reload(true);            
+                    }} >
                     Delete <DeleteIcon/>
                 </Button>
             </CardActions>

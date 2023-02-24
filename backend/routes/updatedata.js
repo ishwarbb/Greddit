@@ -19,7 +19,8 @@ const User = require("../models/user.js");
 // });
 
 
-router.post("/", (req, res) => {
+const auth = require('./middleware');
+router.post("/",auth, (req, res) => {
 //   console.log("Hewwo req = ",req);
 
   const newUser = new User({

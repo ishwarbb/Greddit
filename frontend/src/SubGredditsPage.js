@@ -7,9 +7,10 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useEffect, useRef, useState } from "react";
 import OpenInBrowserIcon from '@mui/icons-material/OpenInBrowser';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { getAllGredditInfo, getJoinedSubgreddits, getUserInfo, joinSubgreddit, leaveSubgreddit, requestSubgreddit } from "./misc";
+import { getAllGredditInfo, getJoinedSubgreddits, getUserInfo, joinSubgreddit, leaveSubgreddit, requestSubgreddit, UpdateDVVD } from "./misc";
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import SGBar from "./SubGredditBar";
+import Auth from "./Auth";
 
 function IsContainedin(Array, element) {
     for (let i = 0; i < Array.length; i++) {
@@ -171,7 +172,7 @@ const SubGredditsPage = () => {
         console.log("hewwo");
     }, [search, tags, sort]);
 
-
+    if(!usrData) return <Auth/>
     return (
         <>
             <Box marginTop='102px' marginLeft='100px' marginBottom='50px' alignItems="center" justifyContent="center" >
@@ -304,7 +305,11 @@ const SubGredditsPage = () => {
                                 </Typography>
                             </CardContent>
                             <CardActions >
-                                <Button color="secondary" onClick={() => window.location.replace("/subgreddits/" + subgreddit._id)}>
+                                <Button color="secondary" onClick={() => 
+                                    {
+                                        UpdateDVVD({sgid : subgreddit._id});
+                                        window.location.replace("/subgreddits/" + subgreddit._id);
+                                    }}>
                                     Open <OpenInBrowserIcon />
                                 </Button>
                                 <Button color="secondary">
@@ -327,7 +332,7 @@ const SubGredditsPage = () => {
                                             onClick={() => {
                                                 console.log("leaving ", subgreddit._id);
                                                 leaveSubgreddit({ sgid: subgreddit._id });
-                                                // window.location.reload(true); 
+                                                window.location.reload(true); 
                                             }}
                                         >
                                             Leave  <GroupAddIcon />

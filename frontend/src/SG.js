@@ -16,6 +16,7 @@ import CommentIcon from '@mui/icons-material/Comment';
 import SaveIcon from '@mui/icons-material/Save';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import FlagIcon from '@mui/icons-material/Flag';
+import Auth from "./Auth";
 
 async function createPost(data) {
     const response = await axios.post(
@@ -196,6 +197,7 @@ const SG = () => {
 
     }
 
+    if(!usrData) return <Auth/>
     return (
         <>
             <Box marginTop='150px' marginLeft='100px' marginBottom='50px' alignItems="center" justifyContent="center" >

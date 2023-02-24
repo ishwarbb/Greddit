@@ -3,8 +3,9 @@ const SubGreddit = require('../models/subgreddit');
 var router = express.Router();
 
 const auth = require('./middleware');
+const updatesgvm = require('./updatesgvm');
 
-router.post('/',auth, async (req, res) => {
+router.post('/',auth,updatesgvm, async (req, res) => {
     console.log(req.body.newuser);
     console.log(req.body.sgid);
 

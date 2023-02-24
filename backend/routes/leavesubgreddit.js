@@ -31,28 +31,27 @@ router.post('/', auth, async (req, res) => {
         newLeftsubgreddits.push(req.body.sgid);
         newLeftsubgreddits = [...new Set(newLeftsubgreddits)];
 
-
-        
         console.log(req.user.email);
-        User.findOneAndUpdate(
+        await User.findOneAndUpdate(
             { email: req.user.email },
             { $set: { leftsubgreddits: newLeftsubgreddits } },
             { new: true }
         )
-        .then(() => {
-        console.log(newPeople);
-        SubGreddit.findOneAndUpdate(
+        // .then(() => {
+        // console.log(newPeople);
+        await SubGreddit.findOneAndUpdate(
             { _id: req.body.sgid },
             { $set: { people: newPeople } },
             { new: true }
-        )})
-        .then((user) => {
-            res.status(200).json(user);
-          })
-        .catch((err) => {
-            console.log(err);
-            res.status(400).send(err);
-        });
+        )
+    // })
+        // .then((user) => {
+            // res.status(200).json(user);
+        //   })
+        // .catch((err) => {
+            // console.log(err);
+            // res.status(400).send(err);
+        // });
 
     } catch (error) {
         console.log("Could not leave");

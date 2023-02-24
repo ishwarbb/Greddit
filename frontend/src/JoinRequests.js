@@ -1,15 +1,17 @@
 import { Avatar, Card, CardContent, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemIcon, ListItemText, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getSubGredditInfobyID, joinSubgreddit, rejectUser } from "./misc";
+import { getSubGredditInfobyID, getUserInfo, joinSubgreddit, rejectUser } from "./misc";
 import MSGInstanceBar from "./MSGInstanceBar";
 import DeleteIcon from '@mui/icons-material/Delete';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 import { green, red } from "@mui/material/colors";
+import Auth from "./Auth";
 
 const MSGInstanceJoinRequests = () => {
   let {id}  = useParams();
+  const [usrData, setUsrData] = useState(null);
   const [people, setPeople] = useState([]);
   const [bannedpeople, setBannedPeople] = useState([]);
   const [requestingpeople, setRequestingPeople] = useState(["a"]);
@@ -17,6 +19,9 @@ const MSGInstanceJoinRequests = () => {
 
   useEffect(() => {
     let promiseB = async () => {
+        const a = await getUserInfo();
+        console.log(a);
+        setUsrData(a);
         const b = await getSubGredditInfobyID({id : id});
         console.log(b);
         console.log(b.people);
@@ -29,6 +34,7 @@ const MSGInstanceJoinRequests = () => {
     promiseB();
 },[]);
 
+    if(!usrData) return <Auth/>
     return ( 
         <div>
             <MSGInstanceBar/>

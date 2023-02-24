@@ -4,7 +4,8 @@ var express = require('express');
 var router = express.Router();
 
 /* GET users listing. */
-router.post('/', function(req, res, next) {
+const auth = require('./middleware');
+router.post('/',auth, function(req, res, next) {
   try{
     console.log(req.body.target);
     console.log(req.body.subject);

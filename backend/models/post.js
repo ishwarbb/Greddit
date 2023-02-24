@@ -24,12 +24,12 @@ const PostSchema = new Schema({
     unique: false,
   },    
   upvotes: {
-    type: String,
+    type: Number,
     required: true,
     unique: false,
   },
   downvotes: {
-    type: String,
+    type: Number,
     required: true,
     unique: false,
   },

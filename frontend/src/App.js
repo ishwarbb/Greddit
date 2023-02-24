@@ -13,6 +13,8 @@ import MSGInstanceJoinRequests from './JoinRequests';
 import Stats from './Stats';
 import Reported from './Reported';
 import SG from './SG';
+// import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+
 
 function App() {
   return (
