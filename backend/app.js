@@ -35,6 +35,9 @@ var blockUser = require("./routes/blockUser.js");
 var deletePost = require("./routes/deletePost.js");
 var deleteSubgreddit = require("./routes/deletesubgreddit.js");
 var getStatbyId = require("./routes/getstatbyid.js");
+var upVote = require("./routes/upvotepost.js");
+var downVote = require("./routes/downvotepost.js");
+
 
 
 var app = express();;
@@ -80,6 +83,9 @@ app.use('/blockuser', blockUser );
 app.use('/deletepost', deletePost );
 app.use('/deletesubgreddit', deleteSubgreddit );
 app.use('/getstatbyid', getStatbyId );
+app.use('/upvotepost', upVote );
+app.use('/downvotepost', downVote );
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
