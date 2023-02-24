@@ -1,4 +1,4 @@
-import { AppBar, Avatar, breadcrumbsClasses, Button, Card, CardActions, CardContent, CardHeader, Grid, TextField, Toolbar } from "@mui/material";
+import { Alert, AlertTitle, AppBar, Avatar, Backdrop, breadcrumbsClasses, Button, Card, CardActions, CardContent, CardHeader, CircularProgress, Grid, TextField, Toolbar } from "@mui/material";
 import { red } from "@mui/material/colors";
 import { Box } from "@mui/system";
 import IconButton from '@mui/material/IconButton';
@@ -12,9 +12,21 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import SGBar from "./SubGredditBar";
 import Auth from "./Auth";
 
+// const Fuse = require('fuse.js');
+import Fuse from "fuse.js";
+// import * as Fuse from 'fuse.js';
+
+
 function IsContainedin(Array, element) {
     for (let i = 0; i < Array.length; i++) {
         if (Array[i]._id === element._id) return true;
+    }
+    return false;
+}
+
+function IsContained(Array, element) {
+    for (let i = 0; i < Array.length; i++) {
+        if (Array[i] === element) return true;
     }
     return false;
 }
@@ -54,15 +66,19 @@ function FollowersSort(a, b) {
     return 0;
 }
 
+function CreationSort(a, b) {
+    if (a.creationDate > b.creationDate) return -1;
+    if (a.creationDate < b.creationDate) return 1;
+    return 0;
+}
+
 function f1(a, b) {
     if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
     if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
-    if (a.name.toLowerCase() === b.name.toLowerCase()) 
-    {
+    if (a.name.toLowerCase() === b.name.toLowerCase()) {
         if (a.people.length > b.people.length) return -1;
         if (a.people.length < b.people.length) return 1;
-        if (a.people.length === b.people.length)
-        {
+        if (a.people.length === b.people.length) {
             //C 
             return 0;
         }
@@ -72,12 +88,10 @@ function f1(a, b) {
 function f2(a, b) {
     if (a.people.length > b.people.length) return -1;
     if (a.people.length < b.people.length) return 1;
-    if (a.people.length === b.people.length)
-    {
+    if (a.people.length === b.people.length) {
         if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
         if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
-        if (a.name.toLowerCase() === b.name.toLowerCase()) 
-        {
+        if (a.name.toLowerCase() === b.name.toLowerCase()) {
             //C 
             return 0;
         }
@@ -88,6 +102,10 @@ const SubGredditsPage = () => {
     const [search, setSearch] = useState("");
     const [tags, setTags] = useState("");
     const [sort, setSort] = useState("");
+
+    const [load, setLoad] = useState(false);
+    const [alert, setAlert] = useState(null);
+    const [rsg, setrsg] = useState(null);
 
     const [usrData, setUsrData] = useState(null);
     const [subgreddits, setSubgreddits] = useState([]);
@@ -110,15 +128,36 @@ const SubGredditsPage = () => {
             setJoinedSubgreddits(b);
             console.log(b.includes(a[6]));
             setUsrData(c);
+            setLoad(false);
 
         };
 
         promiseB();
-    }, []);
+    }, [rsg]);
+
+    useEffect(() => {
+        if (load !== false) {
+            let promiseC = async (sgid) => {
+                console.log("sgid ",sgid);
+                var res = await requestSubgreddit({ sgid: sgid });
+                setrsg(1);
+                console.log(res);
+                if (res === 200) {
+                    // setLoad(false);
+                }
+            }
+            promiseC(rsg);
+        }
+    }, [load]);
 
 
     useEffect(() => {
-        var newSubgreddits = subgreddits.filter(a => a.name.trim().toLowerCase().includes(search.trim().toLowerCase()));
+        // var newSubgreddits = subgreddits.filter(a => a.name.trim().toLowerCase().includes(search.trim().toLowerCase()));
+        const fuse = new Fuse(subgreddits, {
+            keys: ["name"]
+        })
+        var newSubgreddits = fuse.search(search).map(x => x.item);
+
         var appliedTags = tags.split(',').map(item => item.trim().toLowerCase());
         console.log(appliedTags);
         console.log(appliedTags === ['']);
@@ -142,15 +181,13 @@ const SubGredditsPage = () => {
         console.log(appliedSorts);
         console.log(newSubgreddits);
         if (appliedSorts !== [] && !(appliedSorts.length === 1 && appliedSorts[0] === '')) {
-            if(appliedSorts.length === 1)
-            {
+            if (appliedSorts.length === 1) {
                 if (appliedSorts[0] === "name") newSubgreddits.sort(NameASort);
                 if (appliedSorts[0] === "followers") newSubgreddits.sort(FollowersSort);
                 // if (appliedSorts[0] === "creation date") newSubgreddits.sort(NameASort);
             }
 
-            if(appliedSorts.length === 2)
-            {
+            if (appliedSorts.length === 2) {
                 if (appliedSorts[0] === "name" && appliedSorts[1] === "followers")
                     newSubgreddits.sort(f1);
                 if (appliedSorts[1] === "name" && appliedSorts[0] === "followers")
@@ -172,7 +209,7 @@ const SubGredditsPage = () => {
         console.log("hewwo");
     }, [search, tags, sort]);
 
-    if(!usrData) return <Auth/>
+    if (!usrData) return <Auth />
     return (
         <>
             <Box marginTop='102px' marginLeft='100px' marginBottom='50px' alignItems="center" justifyContent="center" >
@@ -273,6 +310,20 @@ const SubGredditsPage = () => {
                 // justifyContent="center"
                 style={{ minHeight: '100vh', marginTop: '20px' }}
             >
+                {alert &&
+                    (
+                        <Backdrop
+                            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                            open
+                            onClick={() => setAlert(0)}
+                        >
+                            <Alert severity="error">
+                                <AlertTitle>Not Allowed</AlertTitle>
+                                You cant join this subgreddit <strong> As you already left it!</strong>
+                            </Alert>
+                        </Backdrop>
+                    )
+                }
 
                 {showSubgreddits.map((subgreddit) =>
                 (
@@ -305,34 +356,53 @@ const SubGredditsPage = () => {
                                 </Typography>
                             </CardContent>
                             <CardActions >
-                                <Button color="secondary" onClick={() => 
-                                    {
-                                        UpdateDVVD({sgid : subgreddit._id});
-                                        window.location.replace("/subgreddits/" + subgreddit._id);
-                                    }}>
+                                <Button color="secondary" onClick={() => {
+                                    UpdateDVVD({ sgid: subgreddit._id });
+                                    window.location.replace("/subgreddits/" + subgreddit._id);
+                                }}>
                                     Open <OpenInBrowserIcon />
                                 </Button>
-                                <Button color="secondary">
-                                    Delete <DeleteIcon />
-                                </Button>
+
                                 {/* { joinedSubgreddits.includes(subgreddit) && */}
+
                                 {
                                     !IsContainedin(joinedSubgreddits, subgreddit) ?
-                                        (<Button color="secondary" onClick={
-                                            () => {
-                                                console.log("joining ", subgreddit._id);
-                                                requestSubgreddit({ sgid: subgreddit._id });
-                                                window.location.reload(true);
-                                            }}>
-                                            Join  <GroupAddIcon />
-                                        </Button>)
+                                        (!IsContained(subgreddit.requestingpeople, usrData.email) ?
+                                            (<Button color="secondary" disabled={load} onClick={
+                                                async (x) => {
+                                                    console.log("joining ", subgreddit._id);
+                                                    setLoad(true);
+                                                    console.log(usrData.leftsubgreddits);
+                                                    if (!IsContainedin(usrData.leftsubgreddits, subgreddit)) {
+                                                        setAlert(0);
+                                                        setrsg(subgreddit._id);
+                                                        // window.location.reload(true);
+                                                    }
+                                                    else {
+                                                        setAlert(1);
+                                                        console.log("You cant do that");
+                                                        return;
+                                                    }
+                                                }}>
+                                                Join {load && (usrData.email === subgreddit.creator) ? (<CircularProgress />) : (<></>)} <GroupAddIcon />
+                                            </Button>) :
+                                            (<Button color="secondary" disabled
+                                            sx={{
+                                                "&.Mui-disabled": {
+                                                //   background: "#eaeaea",
+                                                  color: "#ce93d8"
+                                                }
+                                              }} >
+                                                Join Pending
+                                            </Button>)
+                                        )
                                         :
                                         (<Button disabled={usrData.email === subgreddit.creator ? true : false}
                                             color="secondary"
                                             onClick={() => {
                                                 console.log("leaving ", subgreddit._id);
                                                 leaveSubgreddit({ sgid: subgreddit._id });
-                                                window.location.reload(true); 
+                                                window.location.reload(true);
                                             }}
                                         >
                                             Leave  <GroupAddIcon />

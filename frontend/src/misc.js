@@ -177,8 +177,14 @@ export const requestSubgreddit = async (sgid) => {
     try {
       axios.defaults.headers.common['x-auth-token'] = token;
       const res = await axios.post(`/requestsubgreddit`,sgid);
-      // console.log(res.data.user);
-      return res.data.post;
+      // if(res.status === 399)
+      // {
+      //   return 399;
+      // }
+      console.log("miscdata ",res.data);
+      console.log("miscdata status ",res.data.status);
+      console.log("misc status ",res.status);
+      return res.status;
       
     } catch (err) {
       console.error(err);

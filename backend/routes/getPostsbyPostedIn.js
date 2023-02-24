@@ -34,7 +34,7 @@ router.post('/',auth,updatedvvd,async (req, res) => {
         var text = posts[i].text;
         for(let i = 0; i < subgreddit.bannedKeywords.length; i++)
         {
-          text = text.replace(subgreddit.bannedKeywords[i], '*'.repeat(subgreddit.bannedKeywords[i].length));
+          text = text.replaceAll(subgreddit.bannedKeywords[i], '*'.repeat(subgreddit.bannedKeywords[i].length));
         }
         posts[i].text = text;
       }
