@@ -10,7 +10,7 @@ import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import OpenInBrowserIcon from '@mui/icons-material/OpenInBrowser';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from "axios";
-import { addComments, getPosts, getPostsbyPostedIn, getSubGredditInfobyID, getUserInfo } from "./misc";
+import { addComments, downVote, getPosts, getPostsbyPostedIn, getSubGredditInfobyID, getUserInfo, upVote } from "./misc";
 import { useParams } from "react-router-dom";
 import CommentIcon from '@mui/icons-material/Comment';
 import SaveIcon from '@mui/icons-material/Save';
@@ -343,13 +343,21 @@ const SG = () => {
                                                 </Typography>
                                             </CardContent>
                                             <CardActions>
-                                                <IconButton aria-label="upvote">
+                                                <IconButton aria-label="upvote" onClick={() => {
+                                                    console.log(post._id);
+                                                    upVote({id : post._id});
+                                                    // window.location.reload(true);
+
+                                                }}>
                                                     <ThumbUpIcon />
                                                 </IconButton>
                                                 <Typography>
                                                     {post.upvotes}
                                                 </Typography>
-                                                <IconButton aria-label="downvote">
+                                                <IconButton aria-label="downvote" onClick={() => {
+                                                    downVote({id : post._id});
+                                                    window.location.reload(true);
+                                                }}>
                                                     <ThumbDownIcon />
                                                 </IconButton>
                                                 <Typography>

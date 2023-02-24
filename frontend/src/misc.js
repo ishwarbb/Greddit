@@ -416,3 +416,38 @@ export const UpdateDVVD = async (id) => {
     delete axios.defaults.headers.common['x-auth-token'];
   }
 };
+
+export const upVote = async (id) => {
+  const token = localStorage.getItem('token');
+
+  if (token) {
+    try {
+      axios.defaults.headers.common['x-auth-token'] = token;
+      const res = await axios.post(`/upvotepost`,id);
+      return res.data.post;
+      
+    } catch (err) {
+      console.error(err);
+    }
+  } else {
+    delete axios.defaults.headers.common['x-auth-token'];
+  }
+};
+
+
+export const downVote = async (id) => {
+  const token = localStorage.getItem('token');
+
+  if (token) {
+    try {
+      axios.defaults.headers.common['x-auth-token'] = token;
+      const res = await axios.post(`/downvotepost`,id);
+      return res.data.post;
+      
+    } catch (err) {
+      console.error(err);
+    }
+  } else {
+    delete axios.defaults.headers.common['x-auth-token'];
+  }
+};
