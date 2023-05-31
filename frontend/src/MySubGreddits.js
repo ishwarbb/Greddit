@@ -32,6 +32,19 @@ const MyGreddits = () => {
     const [usrData, setUsrData] = useState(null);
     const [subgreddits, setSubgreddits] = useState([]);
 
+    const fieldErrorValues = {
+        "name": false,
+      }
+      const [fieldErrors, setFieldErrors] = useState(fieldErrorValues);
+      const [msg, setMsg] = useState(null);
+      const ErrorMsg = () => {
+        return (
+          <Typography color="red">
+            {msg}
+          </Typography>
+        )
+      };
+
     const handleClickOpen = () => {
         setOpen(true);
       };
@@ -39,10 +52,6 @@ const MyGreddits = () => {
       const handleClose = () => {
         setOpen(false);
       };
-
-    // const handleExpandClick = () => {
-    //   setExpanded(!expanded);
-    // };
 
 
     useEffect(() => {
@@ -63,6 +72,19 @@ const MyGreddits = () => {
         const data = new FormData(event.currentTarget);
         
         console.log("submitted ",data)
+
+        let noAccept = 0;
+
+        if (data.get('name') === "") {
+          fieldErrorValues['name'] = true;
+          setFieldErrors(fieldErrorValues);
+          noAccept = 1;
+        }
+    
+        if (noAccept) {
+          setMsg("Please enter valid entries");
+          return;
+        }
 
         let subgredditdata = {
             creator: usrData.email,
@@ -143,6 +165,7 @@ const MyGreddits = () => {
                 />
                 </DialogContent>
                 <DialogActions>
+                <ErrorMsg />
                 <Button onClick={handleClose}>Cancel</Button>
                 <Button type="submit" >Create</Button>
                 </DialogActions>
@@ -179,12 +202,6 @@ const MyGreddits = () => {
                 </Typography>
             </CardContent>
             <CardActions disableSpacing>
-                {/* <IconButton aria-label="upvote">
-                <ThumbUpIcon />
-                </IconButton>
-                <IconButton aria-label="downvote">
-                <ThumbDownIcon />
-                </IconButton> */}
                 <Button color="secondary" onClick={()=> window.location.replace("/mysubgreddits/"+subgreddit._id + "/users") }>
                     Open <OpenInBrowserIcon/>
                 </Button>

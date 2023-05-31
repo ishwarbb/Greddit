@@ -29,6 +29,9 @@ function IsContained(Array, element) {
         if (Array[i] === element) return true;
     }
     return false;
+
+    // return true;
+
 }
 
 function Intersection(Array1, Array2) {
@@ -170,6 +173,12 @@ const SubGredditsPage = () => {
     }
 
     useEffect(() => {
+        var newSubgreddits = showSubgreddits;
+        newSubgreddits.sort(f0);
+        setShowSubgreddits(newSubgreddits);
+    },[subgreddits]);
+
+    useEffect(() => {
         let promiseB = async () => {
             const a = await getAllGredditInfo();
             const b = await getJoinedSubgreddits();
@@ -184,11 +193,10 @@ const SubGredditsPage = () => {
             console.log(b.includes(a[6]));
             setUsrData(c);
             setLoad(false);
-
         };
 
         promiseB();
-    }, [rsg]);
+    }, [rsg,]);
 
     useEffect(() => {
         if (load !== false) {
@@ -209,7 +217,8 @@ const SubGredditsPage = () => {
     useEffect(() => {
         // var newSubgreddits = subgreddits.filter(a => a.name.trim().toLowerCase().includes(search.trim().toLowerCase()));
         var newSubgreddits = subgreddits;
-
+            newSubgreddits.sort(f0);
+            setShowSubgreddits(newSubgreddits);
         var appliedTags = tags.split(',').map(item => item.trim().toLowerCase());
         console.log(appliedTags);
         console.log(appliedTags === ['']);

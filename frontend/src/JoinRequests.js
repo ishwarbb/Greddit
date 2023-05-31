@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getSubGredditInfobyID, getUserInfo, joinSubgreddit, rejectUser } from "./misc";
 import MSGInstanceBar from "./MSGInstanceBar";
-import DeleteIcon from '@mui/icons-material/Delete';
+// import DeleteIcon from '@mui/icons-material/Delete';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 import { green, red } from "@mui/material/colors";
