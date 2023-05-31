@@ -87,7 +87,7 @@ const SignIn = () => {
           // if(data.get('password') !== user["password"])
           
           console.log("Calling userAuth");
-          var x = userAuth(userdetails);
+         userAuth(userdetails);
 
         }
       };

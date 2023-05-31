@@ -1,10 +1,10 @@
-import { Box, CircularProgress, Grid, Typography } from "@mui/material";
+import {  CircularProgress, Grid, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
 const Auth = () => {
-    function mylink(link, name) {
-        return <Link href={link} underline="hover"> {name} </Link>
-    };
+    // function mylink(link, name) {
+    //     return <Link href={link} underline="hover"> {name} </Link>
+    // };
 
     return ( 
         <Grid

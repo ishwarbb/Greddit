@@ -68,7 +68,13 @@ const Register = () => {
 
     const fieldErrorValues = {
       "email": false,
-      "password": false
+      "password": false,
+      "username": false,
+      "firstname": false,
+      "lastname": false,
+      "age":false,
+      "contactnumber": false
+
     }
 
     setFieldErrors(fieldErrorValues);
@@ -85,6 +91,38 @@ const Register = () => {
       setFieldErrors(fieldErrorValues);
       noAccept = 1;
     }
+
+    if (data.get('username') === "") {
+      fieldErrorValues['username'] = true;
+      setFieldErrors(fieldErrorValues);
+      noAccept = 1;
+    }
+
+    if (data.get('firstName') === "") {
+      fieldErrorValues['firstname'] = true;
+      setFieldErrors(fieldErrorValues);
+      noAccept = 1;
+    }
+
+    if (data.get('lastName') === "") {
+      fieldErrorValues['lastname'] = true;
+      setFieldErrors(fieldErrorValues);
+      noAccept = 1;
+    }
+
+    if (data.get('age') === "") {
+      fieldErrorValues['age'] = true;
+      setFieldErrors(fieldErrorValues);
+      noAccept = 1;
+    }
+
+    if (data.get('contactnumber') === "") {
+      fieldErrorValues['contactnumber'] = true;
+      setFieldErrors(fieldErrorValues);
+      noAccept = 1;
+    }
+
+ 
 
     if (noAccept) {
       setMsg("Please enter valid entries");
@@ -137,6 +175,7 @@ const Register = () => {
             label="First Name"
             autoFocus
             error={fieldErrors['firstname']}
+            // error={1}
           />
         </Grid>
         <Grid item xs={12} sm={6}>

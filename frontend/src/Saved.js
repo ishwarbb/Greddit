@@ -94,39 +94,10 @@ const SavedPosts = () => {
                                     </Typography>
                                 </CardContent>
                                 <CardActions disableSpacing>
-                                    <Typography>
-                                        {savedPost.upvotes}
-                                    </Typography>
-                                    <IconButton aria-label="downvote">
-                                        <ThumbDownIcon />
-                                    </IconButton>
-                                    <Typography>
-                                        {savedPost.downvotes}
-                                    </Typography>
-                                    <Button color="secondary">
-                                        Comment <CommentIcon />
-                                    </Button>
                                     <Button color="secondary" onClick={() => {removeSavedPostbyId({postid : savedPost}); window.location.reload(true); } }  >
                                         Unsave <SaveIcon />
                                     </Button>
-                                    <Button color="secondary">
-                                        Follow User <GroupAddIcon />
-                                    </Button>
                                 </CardActions>
-                                <Typography color="secondary">
-                                                    Comments : {postInfo[savedPost] ? postInfo[savedPost].comments.length : "-"}
-                                </Typography>
-                                {postInfo[savedPost] ? postInfo[savedPost].comments.map((comment) => (
-                                                <List>
-                                                    <ListItem button>
-                                                        <ListItemAvatar>
-                                                            <Avatar alt="Profile Picture"> R </Avatar>
-                                                        </ListItemAvatar>
-                                                        <ListItemText primary={usrData.userName} secondary={comment} />
-                                                    </ListItem>
-                                                </List>
-                                            )) : (<></>)
-                            }
                             </Card>
                             <br></br>
                         </>

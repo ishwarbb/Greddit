@@ -1,4 +1,4 @@
-import { Avatar, Button, Card, CardActions, CardContent, CardHeader, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, List, ListItem, ListItemAvatar, ListItemText, Modal, TextField } from "@mui/material";
+import { Alert, AlertTitle, Avatar, Backdrop, Button, Card, CardActions, CardContent, CardHeader, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, List, ListItem, ListItemAvatar, ListItemText, Modal, TextField } from "@mui/material";
 import { red } from "@mui/material/colors";
 import { Box } from "@mui/system";
 import IconButton from '@mui/material/IconButton';
@@ -66,6 +66,22 @@ async function reportPost(data) {
     }
 }
 
+function IsContainedin(Array, element) {
+    for (let i = 0; i < Array.length; i++) {
+        if (Array[i]._id === element._id) return true;
+    }
+    return false;
+}
+
+function IsContained(Array, element) {
+    // for (let i = 0; i < Array.length; i++) {
+    //     if (Array[i] === element) return true;
+    // }
+    // return false;
+
+    return false;
+}
+
 
 
 const SG = () => {
@@ -85,15 +101,43 @@ const SG = () => {
         window.location.reload(true);
     }
 
+    const fieldErrorValues = {
+        "text": false,
+      }
+      const [fieldErrors, setFieldErrors] = useState(fieldErrorValues);
+      const [msg, setMsg] = useState(null);
+      const ErrorMsg = () => {
+        return (
+          <Typography color="red">
+            {msg}
+          </Typography>
+        )
+      };
+
+      const [alert, setAlert] = useState(null);
+      const [access, setAccess] = useState(1);
+
     const [commentForm, setCommentForm] = useState(null);
 
     const inputRef = useRef(null);
 
     const handleClickOpen = () => {
+        if(!access)
+        {
+            console.log("you dont belong here");
+            setAlert(1);
+            return
+        }
         setOpen(true);
     };
 
     const handleClickOpen2 = () => {
+        if(!access)
+        {
+            console.log("you dont belong here");
+            setAlert(1);
+            return
+        }
         setOpen2(true);
     };
 
@@ -119,6 +163,14 @@ const SG = () => {
             console.log("a.email = ", a.email);
             console.log("b = ", b);
             console.log("c = ", c);
+            console.log("c.people = ", c.people);
+            console.log("a.email = ", a.email);
+            if(IsContained(c.people, a.email) )
+            {
+                console.log("you dont belong here");
+                setAlert(1);
+                setAccess(0);
+            }
             setUsrData(a);
             setPosts(b);
             setSubGredditData(c);
@@ -132,6 +184,26 @@ const SG = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
+
+        if(!access)
+        {
+            console.log("you dont belong here");
+            setAlert(1);
+            return
+        }
+
+        let noAccept = 0;
+
+        if (data.get('text') === "") {
+          fieldErrorValues['text'] = true;
+          setFieldErrors(fieldErrorValues);
+          noAccept = 1;
+        }
+    
+        if (noAccept) {
+          setMsg("Please enter valid entries");
+          return;
+        }
 
         console.log("submitted post =", data)
 
@@ -153,7 +225,7 @@ const SG = () => {
         var text = data.get('text');
         var x = subGredditData.bannedKeywords;
         x = x.filter(a => text.trim().toLowerCase().includes(a.trim().toLowerCase()));
-        if(x.length > 0)
+        if(x.length > 0 && subGredditData.bannedKeywords[0].trim() !== "")
         {
             handleWarningOpen();
         }else
@@ -166,8 +238,29 @@ const SG = () => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
 
+        if(!access)
+        {
+            console.log("you dont belong here");
+            setAlert(1);
+            return
+        }
+
         console.log("submitted report =", data);
         console.log("submitted report =", data.get('concern'));
+
+        let noAccept = 0;
+
+        if (data.get('concern') === "") {
+          fieldErrorValues['concern'] = true;
+          setFieldErrors(fieldErrorValues);
+          noAccept = 1;
+        }
+    
+        if (noAccept) {
+          setMsg("Please enter valid entries");
+          return;
+        }
+
 
         let postdata = {
             pid: reportedpid,
@@ -184,13 +277,34 @@ const SG = () => {
     };
 
     const handleCommentSubmit = (event, post) => {
+
+        if(!access)
+        {
+            console.log("you dont belong here");
+            setAlert(1);
+            return
+        }
+
         event.preventDefault();
         const data = new FormData(event.currentTarget);
+
+        let noAccept = 0;
+
+        if (data.get('comment') === "") {
+          fieldErrorValues['comment'] = true;
+          setFieldErrors(fieldErrorValues);
+          noAccept = 1;
+        }
+    
+        if (noAccept) {
+          setMsg("Please enter valid entries");
+          return;
+        }
 
         console.log("comment = ", data.get('comment'));
         console.log("on post = ", commentForm);
 
-        var comment = usrData.userName.fontcolor("green") + ":  " + data.get('comment');
+        var comment = data.get('comment');
 
         addComments({ pid: commentForm, comment: comment });
         window.location.reload(true);
@@ -204,7 +318,21 @@ const SG = () => {
                 <Button variant="contained" color="secondary" onClick={handleClickOpen} >Create Post</Button>
             </Box>
 
-
+            {alert ?
+                    (
+                        <Backdrop
+                            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                            open
+                            onClick={() => setAlert(0)}
+                        >
+                            <Alert severity="error">
+                                <AlertTitle>Not Allowed</AlertTitle>
+                                You wont be able to interact here <strong> As you havent joined here</strong>
+                            </Alert>
+                        </Backdrop>
+                    ) : 
+                    (<></>)
+                }
             <Grid
                 container
                 spacing={3}
@@ -264,6 +392,7 @@ const SG = () => {
 
                                 </DialogContent>
                                 <DialogActions>
+                                    <ErrorMsg></ErrorMsg>
                                     <Button onClick={handleClose}>Cancel</Button>
                                     <Button type="submit" >Create</Button>
                                 </DialogActions>
@@ -288,6 +417,7 @@ const SG = () => {
 
                                 </DialogContent>
                                 <DialogActions>
+                                <ErrorMsg></ErrorMsg>
                                     <Button onClick={handleClose2}>Cancel</Button>
                                     <Button type="submit" color="warning" >Report</Button>
                                 </DialogActions>
@@ -344,6 +474,12 @@ const SG = () => {
                                             </CardContent>
                                             <CardActions>
                                                 <IconButton aria-label="upvote" onClick={() => {
+                                                            if(!access)
+                                                            {
+                                                                console.log("you dont belong here");
+                                                                setAlert(1);
+                                                                return
+                                                            }
                                                     console.log(post._id);
                                                     upVote({id : post._id});
                                                     // window.location.reload(true);
@@ -355,6 +491,12 @@ const SG = () => {
                                                     {post.upvotes}
                                                 </Typography>
                                                 <IconButton aria-label="downvote" onClick={() => {
+                                                            if(!access)
+                                                            {
+                                                                console.log("you dont belong here");
+                                                                setAlert(1);
+                                                                return
+                                                            }
                                                     downVote({id : post._id});
                                                     window.location.reload(true);
                                                 }}>
@@ -363,20 +505,56 @@ const SG = () => {
                                                 <Typography>
                                                     {post.downvotes}
                                                 </Typography>
-                                                <Button color="secondary" onClick={() => setCommentForm(post._id)} >
+                                                <Button color="secondary" onClick={() => 
+                                                    {
+                                                        if(!access)
+                                                        {
+                                                            console.log("you dont belong here");
+                                                            setAlert(1);
+                                                            return;
+                                                        }
+                                                        else
+                                                        {
+                                                        setCommentForm(post._id);
+                                                        }} 
+                                                    }>
                                                     Comment <CommentIcon />
                                                 </Button>
-                                                <Button color="secondary" onClick={() => savepost(post._id)}>
+                                                <Button color="secondary" onClick={() => 
+                                                    {
+                                                        if(!access)
+                                                        {
+                                                            console.log("you dont belong here");
+                                                            setAlert(1);
+                                                            return
+                                                        }
+                                                        savepost(post._id)
+                                                }}>
                                                     Save <SaveIcon />
                                                 </Button>
                                                 <Button disabled={usrData.email === subGredditData.creator ? true : false}
-                                                color="secondary" onClick={() => followuser(post.postedBy)}>
+                                                color="secondary" onClick={() => 
+                                                {
+                                                    if(!access)
+                                                    {
+                                                        console.log("you dont belong here");
+                                                        setAlert(1);
+                                                        return
+                                                    }
+                                                    followuser(post.postedBy)}
+                                                }>
                                                     Follow User <PersonAddAlt1Icon />
                                                 </Button>
                                                 {/* <Button color="secondary" onClick={() => reportPost(post._id,subGredditData._id)} > */}
                                                 <Button color="secondary" 
                                                 disabled={usrData.email === subGredditData.creator ? true : false}
                                                 onClick={() => {
+                                                    if(!access)
+                                                    {
+                                                        console.log("you dont belong here");
+                                                        setAlert(1);
+                                                        return
+                                                    }
                                                     setReportedPid(post._id);
                                                     setReportedText(post.text);
                                                     handleClickOpen2();
@@ -399,10 +577,12 @@ const SG = () => {
                                                                 backgroundcolor="#ffffff"
                                                                 style={{ marginLeft: "15px", marginRight: "15px", width: "600px" }}
                                                             />
+                                                            
                                                             <Button color="secondary" variant="contained" type="submit">
                                                                 Submit
                                                             </Button>
                                                         </Container>
+                                                        <ErrorMsg></ErrorMsg>
                                                     </Box>
 
                                                 </> : <></>
